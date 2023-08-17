@@ -1,0 +1,98 @@
+.event-input {
+  padding: 12px;
+}
+
+/* CSS */
+.button-4 {
+  appearance: none;
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(140, 189, 32, 1) 0%,
+    rgba(74, 177, 14, 0.97) 100%
+  ) !important;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0,
+    rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  list-style: none;
+  padding: 10px 16px;
+  position: relative;
+  transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  word-wrap: break-word;
+}
+
+.button-4:hover {
+  background-color: #f3f4f6;
+  text-decoration: none;
+  transition-duration: 0.1s;
+}
+
+.button-4:disabled {
+  background-color: #fafbfc;
+  border-color: rgba(27, 31, 35, 0.15);
+  color: #959da5;
+  cursor: default;
+}
+
+.button-4:active {
+  background-color: #edeff2;
+  box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
+  transition: none 0s;
+}
+
+.button-4:focus {
+  outline: 1px transparent;
+}
+
+.button-4:before {
+  display: none;
+}
+
+.button-4:-webkit-details-marker {
+  display: none;
+}
+.likeButton {
+  border-radius: 30px !important;
+  height: 40px !important;
+  width: 40px !important;
+  color: rgb(45, 173, 233);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  margin-right: 10px;
+}
+.likeButton:hover {
+  background: rgba(195, 204, 179, 0.26);
+}
+.d_flex {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+.imageEvent {
+  height: 100%;
+  width: 100%;
+}
+.likeicon {
+  /* font-size: 10px !important; */
+  margin: 0 !important;
+}
+.likeCount {
+  width: 20px;
+}

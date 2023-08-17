@@ -1,0 +1,48 @@
+/* import poppins font */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.MuiDrawer-paper.MuiDrawer-paperAnchorDockedLeft.MuiDrawer-paperAnchorLeft.MuiPaper-elevation.MuiPaper-elevation0.MuiPaper-root.css-12i7wg6-MuiPaper-root-MuiDrawer-paper {
+  background: rgba(0, 0, 0, 0.911) !important;
+  color: #efefef !important;
+}
+
+button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit.MuiIconButton-edgeStart.MuiIconButton-sizeMedium.css-dhvns5-MuiButtonBase-root-MuiIconButton-root {
+  color: rgb(245, 245, 245);
+
+  background: linear-gradient(
+    90deg,
+    rgb(240, 240, 240) 0%,
+    rgba(140, 189, 32, 1) 0%,
+    rgba(74, 177, 14, 0.97) 100%
+  );
+  border-radius: 50px;
+}
+.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.css-78trlr-MuiButtonBase-root-MuiIconButton-root {
+  color: rgb(245, 245, 245) !important;
+  background: linear-gradient(
+    90deg,
+    rgb(240, 240, 240) 0%,
+    rgba(140, 189, 32, 1) 0%,
+    rgba(74, 177, 14, 0.97) 100%
+  ) !important;
+  border-radius: 50px;
+}
+
+span.MuiBadge-badge.MuiBadge-standard.MuiBadge-anchorOriginTopRight.MuiBadge-anchorOriginTopRightRectangular.MuiBadge-overlapRectangular.MuiBadge-colorSecondary.css-jcn4dz-MuiBadge-badge {
+  background: linear-gradient(
+    90deg,
+    rgb(240, 240, 240) 0%,
+    rgba(140, 189, 32, 1) 0%,
+    rgba(74, 177, 14, 0.97) 100%
+  ) !important;
+}
