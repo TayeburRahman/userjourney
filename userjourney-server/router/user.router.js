@@ -1,28 +1,26 @@
 const {
   createUser,
-  getUser,
-  getAllUser,
-  getUsersScannedProducts,
+  getUser, 
   getLeaderboardUser,
   addFriend,
   getUserFriends,
   removeFriend,
-  getUserData,
-  getUserFriend,
-  getUserFriendData,
-  updateUserName,
+  getUserData, 
+  getUserFriendData, 
   updateProfileImage,
+  googleAuthUser,
+  sendEmailForget,
 } = require("../controllers/user.controllers");
-const upload = require("../middleware/uploadImage");
-const verifyToken = require("../middleware/verifyToken");
+const upload = require("../middleware/uploadImage"); 
 
 const router = require("express").Router();
 
 router.route("/signup").post(createUser);
+router.route("/auth").post(googleAuthUser);
 router.route("/login").post(getUser);
-router.route("/update/name/:ID").put(updateUserName);
-router.route("/getByAllAuthor").get(verifyToken, getAllUser);
-router.route("/get_user_scanned_product").get(getUsersScannedProducts);
+router.route("/forward/email").post(sendEmailForget);
+
+  
 router.route("/get_leaderboard_user").get(getLeaderboardUser);
 router.route("/get_user_friends").post(getUserFriends);
 router.route("/remove_friend").post(removeFriend);

@@ -2,16 +2,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import * as React from "react";
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import {
-  useGetAllEventsQuery,
-  useGetLikedEventsQuery,
-  useGetUserInfoQuery,
-  useLazyGetFriendListQuery,
-  useLazyGetScanHistoryQuery,
-} from "../features/auth/authApi";
 import NavBar from "./AppBar";
 import SideBar from "./SideBar";
 import "./css/main.css";
@@ -25,15 +17,7 @@ export default function Layout() {
     navigate("/login");
   }
   const { user } = useSelector((state) => state.auth);
-  const [getFriendList] = useLazyGetFriendListQuery();
-  const [getScanHistory] = useLazyGetScanHistoryQuery();
-  useGetAllEventsQuery();
-  useGetLikedEventsQuery(user?.email);
-  useGetUserInfoQuery(user?.email);
-  useEffect(() => {
-    getFriendList({ userId: user?._id });
-    getScanHistory({ userId: user?._id });
-  }, [getFriendList, getScanHistory, user?._id]);
+ 
 
 
   return (

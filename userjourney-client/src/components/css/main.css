@@ -3,37 +3,43 @@
   color: rgba(0, 0, 0, 0.829);
 }
 
+.routing_button {
+  border-top: 1px solid #1a5d1a !important;
+  border-bottom: 1px solid #1a5d1a !important;
+}
+
 .routing_button:hover {
   text-decoration: none !important;
   color: rgba(0, 0, 0, 0.829);
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(140, 189, 32, 1) 0%,
-    rgba(74, 177, 14, 0.97) 100%
-  ) !important;
-}
-
-.routing_button svg {
-  color: white !important;
-}
-
-.background {
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(140, 189, 32, 1) 0%,
-    rgba(74, 177, 14, 0.97) 100%
-  ) !important;
+  border-top: 1px solid #185518 !important;
+  border-bottom: 1px solid #185518 !important;
 }
 
 #background {
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(140, 189, 32, 1) 0%,
-    rgba(74, 177, 14, 0.97) 100%
-  ) !important;
+  color: #f1c93b !important;
+  background: #185518e5 !important;
+  border-top: 1px solid #185518 !important;
+  border-bottom: 1px solid #185518 !important;
+}
+#background_white {
+  color: white !important;
+}
+
+#background_white {
+  color: white !important;
+}
+.pee_pips_dashboard {
+  font-family: George Rounded !important;
+  font-size: 20px !important;
+  font-style: normal;
+  font-weight: 400 !important;
+  line-height: 24px !important;
+  color: var(--white, #fff);
+  margin: 0;
+  padding-left: 10px;
+}
+#noneDisplay {
+  display: none !important;
 }
 
 .font500 {
@@ -85,14 +91,33 @@
 }
 
 /* Nav Css */
-.navbar {
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+.iconNone {
+  color: white !important;
+}
+.navbar-box {
   padding: 15px;
+  background: white;
+  border-radius: 10px;
+  height: 65px;
+  margin-top: 10px;
+  box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px,
+    rgba(255, 255, 255, 0.25) 0px 1px 0px inset;
 }
 .avatar {
   padding-left: 20px;
   padding-right: 20px;
+}
+.avatar_nav {
+  width: 35px !important;
+  height: 35px !important;
+}
+.nav_user_name {
+  font-family: George Rounded !important;
+  font-size: 16px !important;
+  font-style: normal !important;
+  font-weight: 400;
+  line-height: 24px !important;
+  color: var(--black, #000) !important;
 }
 
 /* ------  */
@@ -102,4 +127,24 @@
   height: 100%;
   padding: 10px;
   border-radius: 5px;
+}
+/* --------icon------------- */
+
+.nav_width {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 1s;
+  transform: 1s;
+}
+
+@media only screen and (max-width: 930px) {
+  .pee_pips_dashboard {
+    display: none;
+  }
+
+  .iconNone {
+    display: none !important;
+  }
 }

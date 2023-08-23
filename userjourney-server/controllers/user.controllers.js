@@ -1,32 +1,80 @@
 const userModels = require("../models/user.models");
+const { sendEmail } = require("../services/email.service");
 const { generateToken } = require("../utils/token");
 let bcrypt = require("bcryptjs");
+const admin = require("firebase-admin");
+let db=admin.firestore();
+ 
 
 //  response
 const createUser = async (req, res) => {
   try {
-    const newUser = req.body;
+    const newUser = req.body;  
+    let userRef = db.collection('users').doc(req.body.email)
 
-    console.log(newUser);
-    const ExistingUser = await userModels.findOne({
-      email: req.body.email,
-    });
+    const userData = await userRef.get(newUser);
+    const ExistingUser = userData.data() 
 
-    if (ExistingUser) {
+    if (ExistingUser?.active) {
       return res.json({
         status: "error",
-        message: `${req.body.email} User(email) already exists`,
+        error: `${req.body.email} This User email already exists`,
       });
     }
+    const randomOTP = Math.floor(Math.random() * 12345) + 11;
 
-    const user = await userModels.create(newUser);
-    console.log(user);
+    const userJson = {
+      email: req.body.email,
+      name: req.body.name,
+      password: req.body.password,
+      otp: randomOTP,
+      role: "user",
+      active: false, 
+    };
+
+    const usersDb =  db.collection('users')
+    await usersDb.doc(req.body.email).set(userJson) ;  
+
+    const { password: pwt, ...others } = userJson
 
     return res.status(200).json({
-      user,
+      data: others,
       status: "success",
       message: "User register success",
     });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: "error", message: error });
+  }
+};
+
+const googleAuthUser = async (req, res) => {
+  try {
+    const user = req?.body;    
+    const bearerToken = generateToken(user); 
+
+    const newUser  = {
+      email: user.email,
+      name: user.name,  
+      active: true,
+      role: "user",
+      token: bearerToken,
+    }; 
+
+      const { token, ...others } = newUser 
+      console.log("newUser", "other", others)
+
+      let usersDb = db.collection('users')
+      let  userRes  =await usersDb.doc(req.body.email).set(others)  
+
+       return res.status(200).json({
+        response: userRes,
+        data: newUser,
+        status: "success",
+        error: `Login Successfully`,
+         
+      }); 
+ 
   } catch (error) {
     console.log(error);
     return res.status(500).json({ status: "error", message: error });
@@ -47,57 +95,117 @@ const createUser = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    console.log(email, password);
-
-    if (!email || !password) {
-      return res.status(401).json({
+    const {email, password} = req.body; 
+    if (! email || ! password) {
+      return res.json({
         status: "error",
         message: "Email and password are required",
       });
     }
 
-    const user = await userModels.findOne({ email });
+    const userRef = db.collection("users").doc(email);
+    const response = await userRef.get();
+    const user = response.data()   
+
     if (!user) {
-      return res.status(401).json({
+      return res.json({
         status: "error",
         message: "User not found",
       });
     }
 
-    const isMatchPassword = await bcrypt.compareSync(password, user.password);
+    // const isMatchPassword = await bcrypt.compareSync(password, user.password);
+
+    const isMatchPassword =  password === user.password 
     if (!isMatchPassword) {
-      return res.status(401).json({
+      return res.json({
         status: "error",
-        message: "Password not match",
+        message: "Password Is Wrong",
       });
     }
 
-    console.log("isMatchPassword", isMatchPassword);
-    if (user.status != "active") {
-      return res.status(401).json({
+    if (!user.active) {
+      return res.json({ 
         status: "error",
-        message: "User is not active",
+        message: "Email Is Invalided",
       });
     }
 
-    const token = generateToken(user);
+    const tokenGen = generateToken(user);   
 
-    // IGNORE PASSWORD
-    const { password: pwd, ...others } = user.toObject();
+    const sendUser = {
+      role: user?.role,
+      name: user?.name,
+      otp: user?.otp,
+      email: user?.email,
+      active: user?.active,
+      token: tokenGen
+    }
 
     return res.status(200).send({
       status: "success",
-      user: others,
-      token,
-      id: user._id,
+      data: sendUser, 
       message: "User Login Successful",
     });
   } catch (error) {
-    return res.status(401).json({ status: "error", message: error.massages });
+    return res.json({ status: "error", message: error.massages });
   }
 };
+
+const updateUserInfo = async (req, res ) => {   
+  try { 
+    const {formData} = req.body   
+    const {email} = req.params
+
+    console.log('data',formData, email)
+
+    delete req.body.formData.email
+
+    let ProjectDB = db.collection('users')
+    await ProjectDB.doc(email).update(formData) 
+  
+   return res.status(201).json({ 
+    status: "success",
+    message:'Profile update successfully'});
+ } catch (error) {
+   return res.status(500).json({status: "error", message: "server error"})
+ }
+} 
+
+const sendEmailForget = async (req, res) => {
+  try {
+    const {email} = req.body; 
+    // console.log("email", email)
+
+    const userRef = db.collection("users").doc(email);
+    const response = await userRef.get();
+    const user = response.data()   
+
+    // console.log("user", user)
+    if(!user) { 
+      console.log("userNo", user)  
+      return res.json({
+         status: "error",
+         message: "Invalid email address"
+        
+      });
+    }  
+    //  sendEmail(email) 
+
+     return res.status(200).send({
+      status: "success",
+      data: user, 
+      message: "Check your email address",
+    });
+ 
+  } catch (error) {
+    return res.json({ status: "error", message: error.massages });
+  }
+};
+
+
+
+
 
 const getAllUser = async (req, res) => {
   console.log("user", req.user);
@@ -106,22 +214,11 @@ const getAllUser = async (req, res) => {
 
     return res.status(201).send(user);
   } catch (error) {
-    return res.status(401).json({ status: "error", message: error.massages });
+    return res.json({ status: "error", message: error.massages });
   }
 };
 
-const getUsersScannedProducts = async (req, res) => {
-  try {
-    const user = await userModels
-      .findOne({ _id: req.query.id })
-      .select("scanned_products");
-    return res.status(201).send(user?.scanned_products?.reverse());
-  } catch (error) {
-    return res.status(401).json({ status: "error", message: error.massages });
-  }
-};
-
-//   const updateUser= async (req , res) => {
+ 
 
 //   try {
 //        await userModel.updateOne({
@@ -223,7 +320,7 @@ const getUserData = async (req, res) => {
 
     return res.status(201).send(user);
   } catch (error) {
-    return res.status(401).json({ status: "error", message: error.massages });
+    return res.json({ status: "error", message: error.massages });
   }
 };
 
@@ -237,7 +334,7 @@ const getUserFriendData = async (req, res) => {
       );
     return res.status(201).send(friend);
   } catch (error) {
-    return res.status(401).json({ status: "error", message: error.massages });
+    return res.json({ status: "error", message: error.massages });
   }
 };
 
@@ -257,7 +354,7 @@ const updateUserName = async (req, res) => {
 
     return res.status(201).send(update);
   } catch (error) {
-    return res.status(401).json({ status: "error", message: error.massages });
+    return res.json({ status: "error", message: error.massages });
   }
 };
 
@@ -277,7 +374,7 @@ const updateProfileImage = async (req, res) => {
 
     return res.status(201).send(update);
   } catch (error) {
-    return res.status(401).json({ status: "error", message: error.massages });
+    return res.json({ status: "error", message: error.massages });
   }
 };
 
@@ -285,8 +382,11 @@ const updateProfileImage = async (req, res) => {
 module.exports = {
   createUser,
   getUser,
-  getAllUser,
-  getUsersScannedProducts,
+  getAllUser, 
+  sendEmailForget,
+  updateUserInfo,
+
+
   getLeaderboardUser,
   addFriend,
   getUserFriends,
@@ -294,5 +394,7 @@ module.exports = {
   getUserData,
   getUserFriendData,
   updateUserName,
-  updateProfileImage
+  updateProfileImage,
+  googleAuthUser,
+ 
 };

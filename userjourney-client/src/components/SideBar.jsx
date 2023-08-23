@@ -1,22 +1,21 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRight from "@mui/icons-material/ChevronRight";
 import HomeIcon from "@mui/icons-material/Home";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import LogoutIcon from "@mui/icons-material/Logout";
+import MenuIcon from '@mui/icons-material/Menu';
+import { Box, IconButton } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import { styled } from "@mui/material/styles";
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-import { userLoggedOut } from "../features/auth/authSlice";
+import noto_rocket from '../assets/noto_rocket.svg';
 const drawerWidth = 240;
 
 const Drawer = styled(MuiDrawer, {
@@ -46,36 +45,77 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 const SideBar = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
+  const [noneDisplay, setDisplayNone] = React.useState(false);
+  const [user, setCurrentUser] = React.useState(false);
+
   const { pathname } = useLocation();
   const dispatch = useDispatch();
+  var w = window?.innerWidth;
+  const auth = useSelector(state => state.auth); 
 
-  const toggleDrawer = () => {
-    setOpen(!open);
+
+  console.log(auth)
+
+   useEffect(()=>{ 
+    
+    if(w < 920){
+      setOpen(false); 
+      setDisplayNone(false) 
+    }else{
+      setOpen(true);
+    }  
+   },[w,])
+
+   useEffect(()=>{  
+    setCurrentUser(auth)
+   },[pathname])
+ 
+ 
+
+  const toggleDrawer = async () => { 
+      setOpen(!open); 
+      open ? setDisplayNone(true) : setDisplayNone(false)
   };
   // list item for sidebar
 
   const listItem = [
     {
-      name: "Home",
-      icon: <HomeIcon sx={{ color: "#e3e3e3" }} />,
-      to: "/",
+      name: "Dashboard",
+      icon: <HomeIcon  />,
+      to: "/dashboard",
     },
     {
-      name: "Profile",
-      icon: <AccountCircleIcon sx={{ color: "#e3e3e3" }} />,
-      to: "/profile",
+      name: "Products",
+      icon: <AccountCircleIcon   />,
+      to: "/dashboard/products",
+    },
+    {
+      name: "Accounts",
+      icon: <AccountCircleIcon   />,
+      to: "/dashboard/profile",
     }, 
     {
-      name: "Leaderboards",
-      icon: <LeaderboardIcon sx={{ color: "#e3e3e3" }} />,
-      to: "/leaderboards",
+      name: "My Users",
+      icon: <LeaderboardIcon />,
+      to: "/dashboard/my_users",
+    }, 
+     
+    {
+      name: "Projects",
+      icon: <LeaderboardIcon />,
+      to: "/dashboard/project/user_projects",
+    }, 
+    {
+      name: "Credits",
+      icon: <LeaderboardIcon />,
+      to: "/dashboard/credits/user_credits",
     }, 
   ];
 
   const logout = () => {
-    dispatch(userLoggedOut());
-    localStorage.clear();
+    // dispatch(userLoggedOut());
+    // localStorage.clear();
   };
 
   return (
@@ -88,9 +128,19 @@ const SideBar = () => {
           px: [1],
         }}
       >
-        <IconButton onClick={toggleDrawer}>
-          {open ? <ChevronLeftIcon /> : <ChevronRight />}
-        </IconButton>
+        <Box className="nav_width">
+           <Box className="nav_width" id={`${noneDisplay && "noneDisplay"}`}>
+              <img src={noto_rocket} alt="logo" className="noto_rocket" />
+              <h6 className="pee_pips_dashboard">PeepPips</h6> 
+           </Box>
+
+           <IconButton onClick={toggleDrawer} className="iconNone">
+               <MenuIcon className="iconNone" /> 
+          </IconButton>
+   
+           
+        </Box>
+         
       </Toolbar>
       <Divider />
 
@@ -100,20 +150,19 @@ const SideBar = () => {
           <Link className="router_link " to={to} key={to} >
             <ListItemButton
               className="routing_button mb-1"
-              id={`${pathname === to && "background"}`}
+              id={`${pathname === to ? "background": "background_white"}`}
             >
-              <ListItemIcon>{icon}</ListItemIcon>
+              <ListItemIcon id={`${pathname === to ? "background": "background_white"}`}>{icon}</ListItemIcon>
               <ListItemText
                 className="font500"
-                primary={name}
-                sx={{ color: "#e3e3e3" }}
+                primary={name} 
               />
             </ListItemButton>
           </Link>
         ))}
 
         <ListItemButton className="routing_button mb-1" onClick={logout}>
-          <ListItemIcon>
+          <ListItemIcon id="background_white">
             <LogoutIcon />{" "}
           </ListItemIcon>
           <ListItemText
@@ -128,3 +177,4 @@ const SideBar = () => {
 };
 
 export default SideBar;
+ 

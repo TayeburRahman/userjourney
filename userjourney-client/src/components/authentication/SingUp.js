@@ -1,260 +1,196 @@
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { Alert, AlertTitle, Button } from "@mui/material";
-import Typography from "@mui/material/Typography";
+import { Alert, Container, Grid } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../Firebase/Hooks/useAuth";
+import google from '../../assets/google.svg';
+import image_login from '../../assets/loginimage.png';
+import noto_rocket from '../../assets/noto_rocket.svg';
 import { useRegistrationMutation } from "../../features/auth/authApi";
-import "./auth.css";
+import { createUsersData } from "../../features/auth/authSlice";
+import './auth.css';
 
-const SignUp = () => {
+const SingUp = () => {
+  const location = useLocation();
   const [passwordStatus, setPasswordStatus] = useState(false);
-  const [rePasswordStatus, setRePasswordStatus] = useState(false);
+  const [passwordSecStatus, setPasswordSecStatus] = useState(false);
+  const [loginData, setLoginData] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("")
+  const { signImWithGoogle } = useAuth();
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  const navigate = useNavigate();
-  const [isCheckBox, setCheckBox] = useState(false);
-  const [registration, { data: userData, error: responseError }] =
-    useRegistrationMutation();
-  const [error, setError] = useState("");
+  const [registration, { data: resData, error: responseError }] = useRegistrationMutation();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
 
-  const handelCheckBox = () => {
-    if (isCheckBox === false) {
-      setCheckBox(true);
-    } else {
-      setCheckBox(false);
+
+  useEffect(() => {
+    if (resData?.error) {
+      setErrorMessage(resData?.error)
+      return;
     }
-  };
-
-  const onSubmit = async (data) => {
-    // const name = data?.displayName.split(" ");
-    // data.set("username", name);
-    if (data?.password !== data?.confirmPassword) {
-      setError("Password No Match");
-    } else {
-      setError();
-      await registration(data);
+    if (resData?.status === "success") {
+      console.log("resData?.data", resData?.data)
+      dispatch(createUsersData(resData?.data))
+      navigate('/active/otp')
     }
-  };
+    setErrorMessage('')
 
-  useEffect(
-    () => {
-      if (userData?.status === "error") {
-        setError(userData?.message);
-      }
+  }, [resData])
 
-      if (responseError?.data?.message?.errors?.password?.message) {
-        setError(responseError?.data?.message?.errors?.password?.message);
-      }
-
-      if (userData?.status === "success") {
-        alert(
-          `${userData?.user.email} Registration Success. Switching to Login User`
-        );
-        navigate("/login");
-      }
-    },
-    userData,
-    error
-  );
-
-  const handelOnPassword = () => {
+  const handelOnPassword = (e) => {
     setPasswordStatus(passwordStatus === false ? true : false);
+    e.preventDefault();
   };
 
-  const handelOnRePassword = () => {
-    setRePasswordStatus(rePasswordStatus === false ? true : false);
+  const handelSecPassword = (e) => {
+    setPasswordSecStatus(passwordSecStatus === false ? true : false);
+    e.preventDefault();
   };
+ 
+  //   Register Input value
+  const handleonChange = (e) => {
+    const field = e.target.name;
+    const value = e.target.value;
+    const newLoginData = { ...loginData };
+    newLoginData[field] = value;
+    setLoginData(newLoginData);
+    e.preventDefault();
+
+  };
+ 
+
+  //   Register Button
+  const handelRegister = async (e) => {
+    e.preventDefault();
+
+    let fullname = `${loginData?.fst_name} ${loginData.snd_name}`
+
+    if (loginData?.password && loginData?.confirmpassword.length < 6) {
+      setErrorMessage("Password must be at least 6 characters.")
+      return
+    }
+    if (loginData?.password !== loginData?.confirmpassword) {
+      setErrorMessage("Password not match");
+      return
+    }
+    if (!loginData?.email) {
+      setErrorMessage("Please check email again.");
+      return
+    }
+    setErrorMessage("")
+
+    const useData = {
+      name: fullname,
+      password: loginData?.password,
+      email: loginData?.email
+    }
+
+    let userData = { ...useData };
+    await registration(userData) 
+  };
+
+  const handelGoogleSignIn = (e) => {
+    signImWithGoogle(location, navigate)
+  };
+
 
   return (
     <Fragment>
-      <div className="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-xxl-4 col-lg-5">
-              <div className="card">
-                <div
-                  className="card-header  text-center"
-                  style={{ background: "#F8F9FA" }}
-                >
-                  <Link to="/" style={{ textDecoration: "none" }}>
-                    <span>
-                     
-                      <h4>Trash Talk</h4>
-                    </span>
-                  </Link>
-                </div>
-
-                <div className="card-body ">
-                  <div className="text-center w-85     m-auto">
-                    <h4 className="text-dark-50 text-center mt-0 fw-bold">
-                      Sign Up
-                    </h4>
-                    <p className="text-muted" style={{ marginTop: "-5px" }}>
-                      Create a new account, it takes less than a minute.{" "}
-                    </p>
-                  </div>
-
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="mb-2 text-left">
-                      <label htmlFor="displayName" className="form-label m-0">
-                        Full Name
-                      </label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="displayName"
-                        placeholder="Enter your name"
-                        {...register("displayName", {
-                          required: "Name is required",
-                        })}
-                      />
-                    </div>
-
-                    <div className="mb-2 text-left">
-                      <label htmlFor="email" className="form-label m-0">
-                        Email address
-                      </label>
-                      <input
-                        className="form-control"
-                        type="email"
-                        id="email"
-                        placeholder="Enter your email"
-                        {...register("email", {
-                          required: "Email is required",
-                        })}
-                      />
-                    </div>
-
-                    <div className="mb-2 text-left">
-                      <label
-                        htmlFor="password"
-                        className="form-label text-left m-0"
-                      >
-                        Password
-                      </label>
-                      <div className="input-group input-group-merge">
-                        <input
-                          type={passwordStatus ? "text" : "password"}
-                          id="password"
-                          className="form-control"
-                          placeholder="Enter your password"
-                          {...register("password", {
-                            required: "Password is required",
-                          })}
-                        />
-                        <div className="input-group-text p-0">
-                          <Button onClick={handelOnPassword}>
-                            <span className="password-eye">
-                              {passwordStatus ? (
-                                <VisibilityOffIcon className="OnPassword" />
-                              ) : (
-                                <VisibilityIcon className="OnPassword" />
-                              )}
-                            </span>
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mb-2 text-left">
-                      <label
-                        htmlFor="confirmPassword"
-                        className="form-label text-left m-0"
-                      >
-                        Re Password
-                      </label>
-                      <div className="input-group input-group-merge">
-                        <input
-                          type={rePasswordStatus ? "text" : "password"}
-                          id="confirmPassword"
-                          className="form-control"
-                          placeholder="Enter Re password"
-                          {...register("confirmPassword", {
-                            required: "Password is required",
-                          })}
-                        />
-                        <div className="input-group-text p-0">
-                          <Button onClick={handelOnRePassword}>
-                            <span className="password-eye">
-                              {rePasswordStatus ? (
-                                <VisibilityOffIcon className="OnPassword" />
-                              ) : (
-                                <VisibilityIcon className="OnPassword" />
-                              )}
-                            </span>
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mb-2">
-                      <div className="form-check text-left">
-                        <input
-                          type="checkbox"
-                          className="form-check-input"
-                          id="checkbox-signup"
-                          onClick={handelCheckBox}
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="checkbox-signup"
-                        >
-                          I accept{" "}
-                          <a href="/" className="text-muted">
-                            Terms and Conditions
-                          </a>
-                        </label>
-                      </div>
-                    </div>
-
-                    <div className="mb-22 text-center">
-                      <button
-                        className="btn btn-primary"
-                        type="submit"
-                        disabled={isCheckBox === true ? false : true}
-                        style={{
-                          background: "#1560FF",
-                        }}
-                      >
-                        Sign Up
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-
-              <div className="row mt-0">
-                <div className="col-12 text-center">
-                  <p className="text-muted m-1">
-                    Already have account?{" "}
-                    <Link to="/login" className="text-muted ms-1">
-                      <b>Log In</b>
-                    </Link>
-                  </p>
-                </div>
-              </div>
-
-              {error && (
-                <Alert severity="error">
-                  <AlertTitle>
-                    <Typography pt={0.5} variant="body2" gutterBottom>
-                      <strong>Check</strong> - {error ? error : ""}
-                    </Typography>
-                  </AlertTitle>
-                </Alert>
-              )}
-            </div>
+      <div className="account-pages">
+        <Container className="container">
+          <div className="header-log mb-2">
+            <img src={noto_rocket} alt="logo" className="noto_rocket" />
+            <h6 className="pee_pips">PeepPips</h6>
           </div>
-        </div>
+          <Grid container>
+            <Grid item className="login-left mt-4" md={6} xs={12} lg={6}>
+              <h2 className="login-h2"> Powering your <span className="span-ywll">trading</span> success.</h2>
+              <img src={image_login} alt="login" className="image_login" />
+            </Grid>
+            <Grid item className="login-right d-grid-c-c" xs={12} md={6} lg={6}>
+              <div className="login-filed">
+                <h5 className="mt-4 login_account">Create Account</h5>
+                {
+                  errorMessage && <Alert severity="error">{errorMessage}</Alert>
+                }
+
+
+                <form onSubmit={handelRegister} >
+                  <div className="input-group-name">
+                    <input className="effect-13 mt-4" onChange={handleonChange} required type="text" name="fst_name" placeholder="Fast Name" />
+                    <input className="effect-13 mt-4" onChange={handleonChange} type="text" name="snd_name" placeholder="Last Name" />
+                  </div>
+                  <div>
+                    <input className="effect-12 mt-4" onChange={handleonChange} required type="email" name="email" placeholder="Email" />
+                  </div>
+                  <div className="input-group">
+                    <input
+                      required
+                      type={passwordStatus ? "text" : "password"}
+                      name="password"
+                      className="effect-11"
+                      placeholder="Password"
+                      onChange={handleonChange}
+
+                    />
+                    <button className="input-group-button" onClick={handelOnPassword}>
+                      <span className="password-eye">
+                        {passwordStatus ? (
+                          <VisibilityOffIcon className="OnPassword" />
+                        ) : (
+                          <VisibilityIcon className="OnPassword" />
+                        )}
+                      </span>
+                    </button>
+                  </div>
+                  <div className="input-group">
+                    <input
+                      required
+                      type={passwordSecStatus ? "text" : "password"}
+                      name="confirmpassword"
+                      className="effect-11"
+                      placeholder="Confirm password"
+                      onChange={handleonChange}
+
+                    />
+                    <button className="input-group-button" onClick={handelSecPassword}>
+                      <span className="password-eye">
+                        {passwordSecStatus ? (
+                          <VisibilityOffIcon className="OnPassword" />
+                        ) : (
+                          <VisibilityIcon className="OnPassword" />
+                        )}
+                      </span>
+                    </button>
+                  </div>
+                  <button type="submit" className="login_button" >Register</button>
+                </form>
+                <div className=" ">
+                  <h6 className="or_login mt-3">Or Login With</h6>
+
+                  <button className="d-flex auth_google" onClick={handelGoogleSignIn} >
+
+                    <img src={google} alt="logo" className="google_logo" />
+                    <span className="google" >Google</span>
+                  </button>
+
+                  <h6 className="d-flex dont_have justify-content-center mt-3">Don't Have An Account?<Link to='/login' className="span-ywll ms-2">Sign In </Link></h6>
+                </div>
+              </div>
+            </Grid>
+          </Grid>
+          <div className=" ">
+            <h6 className="text-center peeppips">ⓒ Peeppips. All Rights Reserved 2023</h6>
+          </div>
+
+
+        </Container>
       </div>
     </Fragment>
   );
 };
 
-export default SignUp;
+export default SingUp;

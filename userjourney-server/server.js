@@ -1,26 +1,32 @@
  
 /* Init Server  */
 const express = require("express");
-const cors = require("cors"); 
-const connectDB = require("./connection/connectDB"); 
+const cors = require("cors");  
 const mongoose = require('mongoose')
 require("dotenv").config(); 
 const port = process.env.PORT || 5000;
 const app = express();
+const admin = require("firebase-admin");
+const serviceAccount = require("./serviceAccountKey.json");
 
-/* Set Middle wares  */
+/* Set Middle wares */
 app.use(cors());
 app.use(express.json());
  
-// database connect
-connectDB()
+ 
+// Intialize the firebase-admin for store
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+ 
+
 
 
 /* Use Routes  */
-app.use('/api/v1/user', require("./router/user.router"));
-app.use('/api/v1/event', require("./router/event.router")); 
-
-app.use('/uploads', express.static('./uploads'));
+app.use("/api/v1/user", require("./router/user.router"));
+app.use('/api/v1/projects', require("./router/projects.route")); 
+ 
 
 
 /* testing api  */

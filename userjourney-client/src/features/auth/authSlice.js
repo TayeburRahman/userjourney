@@ -3,22 +3,46 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   token: undefined,
   user: undefined,
-  id: undefined,
-  friendList: undefined,
-  scanHistory: undefined,
-  userInfo: undefined,
-  likedEvent: undefined,
-  allEvents: undefined,
+  id: undefined,    
+  otp : undefined,
+  name : undefined,
+  email : undefined, 
+  active : undefined,
+  role : undefined,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    userLoggedIn: (state, action) => {
+    createUsersData: (state, action) => {
+      state.otp = action.payload.otp;
+      state.name = action.payload.name;
+      state.email = action.payload.email; 
+      state.active = action.payload.active;
+      state.role = action.payload.role; 
+      localStorage.setItem('_user', JSON.stringify(action?.payload))
+      localStorage.setItem('_token', JSON.stringify(action?.payload.token))
+    },
+
+    googleAuth: (state, action) => { 
+      state.name = action.payload.name;
+      state.email = action.payload.email; 
+      state.active = action.payload.active;
+      state.role = action.payload.role;
       state.token = action.payload.token;
-      state.user = action.payload.user;
-      state.id = action.payload.id;
+      localStorage.setItem('_token', JSON.stringify(action?.payload.token))
+      localStorage.setItem('_user', JSON.stringify(action?.payload))
+    },
+
+    userLoggedIn: (state, action) => {
+      state.name = action.payload.name;
+      state.email = action.payload.email; 
+      state.active = action.payload.active;
+      state.role = action.payload.role;
+      state.token = action.payload.token;
+      localStorage.setItem('_user', JSON.stringify(action?.payload))
+      localStorage.setItem('_token', JSON.stringify(action?.payload.token))
     },
     userLoggedOut: (state) => {
       state.token = undefined;
@@ -26,31 +50,14 @@ const authSlice = createSlice({
       state.id = undefined;
       state.friendList = null;
     },
-    setFriendList: (state, action) => {
-      state.friendList = action.payload;
-    },
-    setScanHistory: (state, action) => {
-      state.scanHistory = action.payload;
-    },
-    setUserInfo: (state, action) => {
-      state.userInfo = action.payload;
-    },
-    setLikedEvent: (state, action) => {
-      state.likedEvent = action.payload;
-    },
-    setAllEvents: (state, action) => {
-      state.allEvents = action.payload;
-    },
+ 
   },
 });
 
 export const {
   userLoggedIn,
-  userLoggedOut,
-  setFriendList,
-  setScanHistory,
-  setAllEvents,
-  setLikedEvent,
-  setUserInfo,
+  userLoggedOut, 
+  createUsersData,
+  googleAuth,
 } = authSlice.actions;
 export default authSlice.reducer;

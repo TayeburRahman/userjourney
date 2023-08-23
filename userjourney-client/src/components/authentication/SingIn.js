@@ -1,142 +1,116 @@
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { Alert, AlertTitle, Button, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../Firebase/Hooks/useAuth";
+import google from '../../assets/google.svg';
+import image_login from '../../assets/loginimage.png';
+import noto_rocket from '../../assets/noto_rocket.svg';
 import { useLoginUserMutation } from "../../features/auth/authApi";
+import { userLoggedIn } from "../../features/auth/authSlice";
+import './auth.css';
 
 const SignIn = () => {
+  // Post API Stp.P.2 [client sit data server site post]
+  const [loginData, setLoginData] = useState({});
+  const {  isLoading, authError, signImWithGoogle} = useAuth();
   const [passwordStatus, setPasswordStatus] = useState(false);
-  const [error, setError] = useState("");
-  const [select, setSelect] = useState(false);
-  // const location = useLocation();
-  const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const [checkbox, setCheckbox] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("")
+ 
 
-  const [loginUser, { data: userData, error: responseError }] =
-    useLoginUserMutation();
-  useEffect(
-    () => {
-      if (responseError?.data?.status === "error") {
-        setError(responseError?.data?.message);
+  // Login return to the Private Page 
+  const location = useLocation()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [loginUser, { data: resData, error: responseError }] = useLoginUserMutation();
+
+
+  useEffect(() => {
+    if (resData?.status === "error") {
+      setErrorMessage(resData?.message)
+      return;
+    }
+    if (resData?.status === "success") {  
+      dispatch(userLoggedIn(resData.data))   
+
+      if(checkbox){
+        localStorage.setItem('_user', resData?.data)
       }
+      
+      const destination = location?.state?.from || "/";
+      navigate(destination)
+    }
+    setErrorMessage('')
 
-      if (userData?.status === "success") {
-        navigate("/");
-      }
-    },
-    [
-      navigate,
-      responseError?.data?.message,
-      responseError?.data?.status,
-      userData?.status,
-    ],
-    error
-  );
+  }, [resData])
 
-  const onSubmit = async (data) => {
-    await loginUser(data);
-    setError();
+
+  const handelGoogleSignIn = (e) => {
+    signImWithGoogle(location, navigate) 
+  };
+  
+  const handleOnChange = (e) => {
+    const field = e.target.name;
+    const value = e.target.value;
+    const newLoginData = { ...loginData };
+    newLoginData[field] = value;
+
+    console.log('newLoginData',newLoginData)
+    setLoginData(newLoginData);
+    // console.log(newLoginData);
   };
 
-  const handelOnPassword = () => {
+  const handelLogin = async (e) => {
+    e.preventDefault(); 
+    const useData = { 
+      password: loginData?.password,
+      email: loginData?.email
+    }
+
+    let userData = { ...useData }; 
+      await loginUser(userData);
+  
+  };
+
+  // , location,navigate
+  const handelOnPassword = (e) => {
     setPasswordStatus(passwordStatus === false ? true : false);
+    e.preventDefault();
   };
 
   return (
     <Fragment>
-      <div className="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5">
+      <div className="account-pages">
         <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-xxl-4 col-lg-5">
-              <div className="card">
-                <div
-                  className="card-header   text-center"
-                  style={{ background: "#F8F9FA" }}
-                >
-                  <Link to="/" style={{ textDecoration: "none" }}>
-                    <span>
-                      {/* <img
-                                                style={{
-                                                    width: '200px',
-                                                    height: '60px',
-                                                }}
-                                                src="images/SKU-Market-Logo.svg"
-                                                alt="logo"
-                                                height="22"
-                                            /> */}
-                      <h4>Trash Talk</h4>
-                    </span>
-                  </Link>
-                </div>
+           <div className="header-log mb-2">
+              <img src={noto_rocket} alt="logo" className="noto_rocket" />
+              <h6 className="pee_pips">PeepPips</h6> 
+           </div>
+          <Grid container>
+            <Grid item className="login-left mt-4" md={6} xs={12} lg={6}>
+              <h2 className="login-h2"> Powering your <span className="span-ywll">trading</span> success.</h2> 
+              <img src={image_login} alt="login" className="image_login" />
+            </Grid>  
+            <Grid item className="login-right d-grid-c-c" xs={12} md={6} lg={6}>
+              <div className="login-filed pb-4">
+                <h5 className="mt-5 login_account">Login To Your Account</h5>
+          
 
-                <div className="card-body p-4">
-                  <div className="text-center w-75 m-auto">
-                    <h4 className="text-dark-50 text-center p-0 m-0 fw-bold">
-                      Sign In
-                    </h4>
-                    <p className="p-1">
-                      Enter your email address and password to access admin
-                      panel.
-                    </p>
-                  </div>
-
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="mb-3 text-left">
-                      <label htmlFor="email-address" className="form-label">
-                        Email address
-                      </label>
-                      <input
-                        className="form-control"
-                        type="email"
-                        id="email-address"
-                        placeholder="Enter your email"
-                        {...register("email", {
-                          required: "Email is required",
-                          pattern: {
-                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                            message: "invalid email address",
-                          },
-                        })}
-                      />
-                      {errors.email && (
-                        <span className="text-danger">
-                          {errors.email.message}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="mb-2 text-left">
-                      <Link
-                        to="/password/forgot"
-                        className="text-muted float-end"
-                      >
-                        <small>Forgot your password?</small>
-                      </Link>
-                      <label
-                        htmlFor="password"
-                        className="form-label text-left"
-                      >
-                        Password
-                      </label>
-                      <div className="input-group input-group-merge">
+                <form onSubmit={handelLogin}>
+                  <input className="effect-12 mt-5" type="email"  onChange={handleOnChange} name="email" placeholder="Email" />
+                  <div className="input-group">
                         <input
                           type={passwordStatus ? "text" : "password"}
-                          id="password"
-                          className="form-control"
+                          name="password"
+                          className="effect-11"
                           placeholder="Enter your password"
-                          {...register("password", {
-                            required: "Password is required",
-                            minLength: 6,
-                          })}
-                        />
-                        <div className="input-group-text p-0">
-                          <Button onClick={handelOnPassword}>
+                          onChange={handleOnChange}
+                         
+                        /> 
+                          <button className="input-group-button" onClick={handelOnPassword}>
                             <span className="password-eye">
                               {passwordStatus ? (
                                 <VisibilityOffIcon className="OnPassword" />
@@ -144,72 +118,40 @@ const SignIn = () => {
                                 <VisibilityIcon className="OnPassword" />
                               )}
                             </span>
-                          </Button>
-                        </div>
-                      </div>
-                      {errors.password && (
-                        <span className="text-danger">
-                          {errors.password.message}
-                        </span>
-                      )}
-                    </div>
+                          </button> 
+                   </div>
+                   <div className="mt-3 d-flex justify-content-between">
+                       <div className="d-flex">
+                          <input type="checkbox" id="html" name="fav_language" value={checkbox} onSelect={e=>(setCheckbox(checkbox === true? false: true))} className="checkbox" />
+                          <h6 className="m-0 ms-2 checkbox">Remember Me</h6>
+                       </div>
+                       <Link to="/forward/email" className="forgot" >Forgot Your Password?</Link>
+                   </div>
+                   <button className="login_button" type="submit" >Login</button>
+                </form>
 
-                    <div className="mb-2 ">
-                      <div className="form-check text-left">
-                        <input
-                          type="checkbox"
-                          className="form-check-input"
-                          id="checkbox-signin"
-                          checked={select}
-                          onChange={() => setSelect(!select)}
-                        />
-                        <label
-                          className="text-mute form-check-label"
-                          htmlFor="checkbox-signin"
-                        >
-                          Remember me
-                        </label>
-                      </div>
-                    </div>
+                <div className=" ">
+                  <h6 className="or_login">Or Login With</h6>
 
-                    <div className=" mb-0 text-center">
-                      <button
-                        className="btn btn-primary"
-                        type="submit"
-                        style={{
-                          background: "#1560FF",
-                        }}
-                        // disabled={isLoading}
-                      >
-                        Log In
-                      </button>
-                    </div>
-                  </form>
+                  <button className="d-flex auth_google" onClick={handelGoogleSignIn} > 
+
+                  <img src={google} alt="logo" className="google_logo" />
+                    <span className="google">Google</span>
+                  </button>
+
+                  <h6 className="d-flex dont_have justify-content-center mt-3">Don't Have An Account?<Link to='/singup' className="span-ywll ms-2">Sign Up </Link></h6>
                 </div>
-              </div>
 
-              <div className="row mt-3">
-                <div className="col-12 text-center">
-                  <p className="text-muted">
-                    Don't have an account?{" "}
-                    <Link to="/signUp" className="text-muted ms-1">
-                      <b>Sign Up</b>
-                    </Link>
-                  </p>
-                </div>
-              </div>
 
-              {error && (
-                <Alert severity="error">
-                  <AlertTitle>
-                    <Typography pt={0.5} variant="body2" gutterBottom>
-                      <strong>Check</strong> - {error ? error : ""}
-                    </Typography>
-                  </AlertTitle>
-                </Alert>
-              )}
+               
+              </div> 
+            </Grid>  
+          </Grid>
+          <div className=" ">
+              <h6 className="text-center peeppips">ⓒ Peeppips. All Rights Reserved 2023</h6>
             </div>
-          </div>
+          
+          
         </div>
       </div>
     </Fragment>
