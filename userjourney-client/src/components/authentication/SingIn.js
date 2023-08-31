@@ -27,6 +27,8 @@ const SignIn = () => {
   const dispatch = useDispatch()
   const [loginUser, { data: resData, error: responseError }] = useLoginUserMutation();
 
+  // console.log("loginUser", resData)
+
 
   useEffect(() => {
     if (resData?.status === "error") {
@@ -36,9 +38,9 @@ const SignIn = () => {
     if (resData?.status === "success") {  
       dispatch(userLoggedIn(resData.data))   
 
-      if(checkbox){
-        localStorage.setItem('_user', resData?.data)
-      }
+      // if(checkbox){
+      //   localStorage.setItem('_user', resData?.data)
+      // }
       
       const destination = location?.state?.from || "/";
       navigate(destination)

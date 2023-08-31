@@ -1,7 +1,5 @@
 import { Typography } from "@mui/material";
-import axios from "axios";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import email from "../../../assets/email.svg";
 import w_edit_icon from "../../../assets/ep_edit.svg";
 import logo from "../../../assets/profile.avif";
@@ -15,37 +13,13 @@ const Profile = () => {
   const [openEdit, setOpenEdit] = useState(false); 
   const [openChangePass, setOpenChangePass] = useState(false); 
   
-  const { user, friendList, userInfo, likedEvent, allEvents } = useSelector(
-    (state) => state.auth
-  );
+  // const { user, friendList, userInfo, likedEvent, allEvents } = useSelector(
+  //   (state) => state.auth
+  // );
 
   const localAuth = localStorage?.getItem("_user");
   const _user  = JSON.parse(localAuth); 
   
-  const DeleteEvent = (id) => {
-    axios
-      .delete(`http://localhost:5000/api/v1/event/delete/${id}`)
-      .then((res) => {
-        alert("Successfully delete Event!");
-        setEventStatus(eventStatus === 1 ? 0 : 1);
-      });
-  };
-  const handleOnChange = (avatar, popupState)=>{ 
-    axios.put(`http://localhost:5000/api/v1/user/update/profile/${userInfo?.email}`, { avatar},
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        }
-      })
-      .then((res) => { 
-          alert("Successfully Update Profile Image!"); 
-      
-          popupState?.close()
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-} 
 
 const handleChangePassword = () =>{
   setOpenChangePass(true)
@@ -92,12 +66,12 @@ const handleUpdate = () =>{
             <div className=" p-3 row mt-5">
                 <div className=" col-sm-12 col-md-6 col-lg-6 mt-3">
                   <Typography className="phone_text">Phone Number</Typography> 
-                  <Typography className="show_p_number">+000 0000000000</Typography> 
+                  <Typography className="show_p_number">+{_user?.phone_num? _user?.phone_num : "000 0000000000"} </Typography> 
                 </div>
 
                 <div className=" col-sm-12 col-md-6 col-lg-6 mt-3">
                   <Typography className="phone_text">Whatsapp Phone Number</Typography> 
-                  <Typography className="show_p_number">+000 0000000000</Typography> 
+                  <Typography className="show_p_number">+{_user?.wp_num? _user?.wp_num : "000 0000000000"}</Typography> 
                 </div>
              </div> 
         </div>

@@ -33,6 +33,13 @@ export const authApi = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    updateProfileInfo: builder.mutation({
+      query: (data) => ({
+        url: "/api/v1/user/update/profile",
+        method: "PUT",
+        body: data,
+      }),
+    }),
 
     
 
@@ -119,7 +126,10 @@ export const {
   useLoginUserMutation,
   useRegistrationMutation,
   useGoogleSingInMutation,
-  useForwardEmailMutation, 
+  useForwardEmailMutation,  
+  useUpdateProfileInfoMutation, 
+
+   
 
   // useLazyGetFriendListQuery,
   // useLazyGetScanHistoryQuery,

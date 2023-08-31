@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
@@ -75,7 +76,7 @@ export default function DeleteProject({ openRemove, setOpenRemove, project, onSt
                         <Box className="add-button-box"> 
                                 <button onClick={handleOnClick}  className="mt-3 button-delete" >  <img src={remove_icon} alt="logo" className="coles-icon" /> Remove</button>  
                                
-                                <button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</button> 
+                                <Button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</Button> 
                                 </Box>
                         </Box>
                     </Box>

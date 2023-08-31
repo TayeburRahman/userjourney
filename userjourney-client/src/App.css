@@ -43,3 +43,9 @@
     transform: rotate(360deg);
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .MuiDrawer-root.MuiDrawer-docked.css-aq1gdx-MuiDrawer-docked {
+    display: none !important;
+  }
+}

@@ -1,4 +1,5 @@
 import { Select } from "@material-ui/core";
+import { Button } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Chip from '@mui/material/Chip';
@@ -71,6 +72,7 @@ export default function AddProject({ open, setOpen, onState, setOnState }) {
     const [file, setFile] = React.useState() 
     const [accountName, setAccountName] = React.useState([]);
     const theme = useTheme();
+    const [rows, setSubUser] = React.useState([])
     // firebase storage initialize
    
 
@@ -84,9 +86,17 @@ export default function AddProject({ open, setOpen, onState, setOnState }) {
     } = useForm();
 
     const localAuth = localStorage?.getItem("_user");
-      const _user  = JSON.parse(localAuth); 
+    const _user  = JSON.parse(localAuth); 
 
-      console.log(_user)
+
+    
+    React.useEffect(() => { 
+          axios.get(`http://localhost:5000/api/v1/user/sub_user/${_user?.email}`)
+          .then(res => { 
+            setSubUser(res.data.users)  
+          })
+      }, [onState])
+ 
 
 
     const onSubmit = (data) => {
@@ -96,7 +106,8 @@ export default function AddProject({ open, setOpen, onState, setOnState }) {
             expected_sales: data.expected_sales, 
             account_name: accountName,  
             user_email: _user.email,
-            status: "panging"
+            status: "panging",
+            file_name: file?.name,
         };
  
  
@@ -165,16 +176,19 @@ export default function AddProject({ open, setOpen, onState, setOnState }) {
 
                                 <label className="mt-2">Expected sales </label>
                                 <select className="project-add-input" required placeholder="Expected sales per month" {...register("expected_sales")} >
-                                    <option value="Platform your bot runs on"> Platform your bot runs on</option>
-                                    <option value="male">male</option>
-                                    <option value="other">other</option>
+                                    <option value=" "> Expected sales per month</option>
+                                    <option value="0-300">0-300</option>
+                                    <option value="other">300-1000</option>
+                                    <option value="1000 - 10000">1000 - 10000</option>
+                                    <option value="10000 and above">10000 and above</option>
                                 </select>
 
                                 <label className="mt-2">Bot Platform </label>
                                 <select {...register("bot_platform")} required className="project-add-input"  >
-                                    <option value="Platform your bot runs on">Platform your bot runs on</option>
-                                    <option value="male">male</option>
-                                    <option value="other">other</option>
+                                    <option value="">Platform your bot runs on</option>
+                                    <option value="MT5">MT5</option>
+                                    <option value="MT4">MT4</option>
+                                    <option value="other">Python</option>
                                 </select>
 
 
@@ -199,13 +213,13 @@ export default function AddProject({ open, setOpen, onState, setOnState }) {
                                     )}
                                     MenuProps={MenuProps}
                                 >
-                                    {names.map((name) => (
+                                    {rows.map((user) => (
                                         <MenuItem
-                                            key={name}
-                                            value={name}
-                                            style={getStyles(name, accountName, theme)}
+                                            key={user?.email}
+                                            value={user?.email}
+                                            style={getStyles(user?.email, accountName, theme)}
                                         >
-                                            {name}
+                                            {user?.email}
                                         </MenuItem>
                                     ))}
                                 </Select> 
@@ -216,7 +230,7 @@ export default function AddProject({ open, setOpen, onState, setOnState }) {
                                 <Box className="add-button-box"> 
                                 <button className="mt-3 button-add" type="submit">  <img src={add_icon} alt="logo" className="coles-icon" /> Add Project</button>  
                                
-                                <button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</button> 
+                                <Button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</Button> 
                                 </Box>
                             </form>
                         </Box>

@@ -93,6 +93,7 @@
 }
 
 .effect-13 {
+  background: transparent;
   border: 0;
   border: 1px solid #c5c5c5;
   height: 38px;
@@ -237,7 +238,11 @@
 .login-right {
   padding-left: 0px !important;
 }
-
+/* --------label_input_text-------- */
+.label_input_text {
+  padding-top: 5px;
+}
+/* ----------------------- */
 @media only screen and (max-width: 600px) {
   .image_login {
     display: none;

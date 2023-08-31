@@ -18,8 +18,12 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { Fragment, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import delete_svg from '../../../assets/delete.svg';
 import edit_svg from '../../../assets/ep_edit.svg';
+import { projectListGet } from '../../../features/auth/authSlice';
+import useAdmin from '../../../hooks/useAdmin';
+import useUsers from '../../../hooks/useUsers';
 import AddProject from './AddProject';
 import DeleteProject from './DeleteProject';
 import EditProject from './EditProject';
@@ -203,18 +207,42 @@ export default function UserProjectTable() {
   const [openEdit, setOpenEdit] = useState(false); 
   const [openRemove, setOpenRemove] = useState(false); 
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [rows, setAllProject] = useState([])
+  const [myProject, setAllProject] = useState([])
   const [editData, setEditData] = useState([]) 
   const [removeData, setRemoveData] = useState([]) 
+  const localAuth = localStorage?.getItem("_user");  
+  const _user = JSON.parse(localAuth);
  
-
+  const {project: rows}   = useSelector((state) => state.auth);
+  const dispatch = useDispatch() 
+  const isAdmin = useAdmin()
+  const isUsers = useUsers()
+  
  
 
   useEffect(() => {
+
+    if(isAdmin){
       axios.get(`http://localhost:5000/api/v1/projects/get_project`)
-        .then(res => { 
-          setAllProject(res.data?.project)  
-        })
+      .then(res => { 
+        setAllProject(res.data?.project)  
+        dispatch(projectListGet(res.data.project))  
+      })
+    }else if(isUsers){ 
+
+      axios.get(`http://localhost:5000/api/v1/projects/get_project/${_user?.email}`)
+      .then(res => { 
+        setAllProject(res.data?.project)  
+        dispatch(projectListGet(res.data.project))  
+      } )
+    }else{
+      axios.get(`http://localhost:5000/api/v1/projects/get_project/${_user?.email}`)
+      .then(res => { 
+        setAllProject(res.data?.project)  
+        dispatch(projectListGet(res.data.project))  
+      } )
+    }
+      
     }, [onState])
 
   // page select top 
@@ -269,8 +297,7 @@ export default function UserProjectTable() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Box className='p-3 box_peeper' sx={{ width: '100%', mb: 2 }}>
-
+      <Box className='p-3 box_peeper' sx={{ width: '100%', mb: 2 }}> 
            <Box className="dp_sh_flex_box">
             <Typography className='add_project_text'>My Projects</Typography>
 
@@ -366,10 +393,9 @@ export default function UserProjectTable() {
             </Menu>
           </div>
 
-          <Typography className='entries'>Entries</Typography>
+           <Typography className='entries'>Entries</Typography>
            </Box>
-           <Box>
-
+           <Box> 
            <Search className='search_table'>
             <SearchIconWrapper>
               <SearchIcon />
@@ -387,8 +413,8 @@ export default function UserProjectTable() {
           <Table aria-labelledby="tableTitle"   >
             <EnhancedTableHead />
             <TableBody>
-              {visibleRows?.map((row, index) => {
-
+              
+              {visibleRows?.map((row, index) => { 
                 return (
                   <TableRow
                     key={row.name}
@@ -402,8 +428,14 @@ export default function UserProjectTable() {
                       {row.project_name}
                     </TableCell>
                     <TableCell align="right" className='border-left'>{row.status}</TableCell>
-                    <TableCell align="right" className='border-left account'>{row.account_name[0]}</TableCell>
-                    <TableCell align="right" className='border-left platform'>{row.bot_platform}</TableCell>
+                    <TableCell align="right" className='border-left account'
+                    style={{paddingTop: "0", paddingBottom: "0"}}
+                    >{ 
+                    row?.account_name.map((email) =>(
+                      <> {email}, </>
+                    ))
+                    }</TableCell>
+                    <TableCell align="right" className='border-left platform'>  {row.bot_platform}</TableCell>
                     <TableCell align="right" className='border-left border-right'> 
                      <Box className="w-100 d-flex dp_c_sa">
                        <button className='edit_button' onClick={e =>handleOpenEdit(row)}> 
@@ -411,7 +443,7 @@ export default function UserProjectTable() {
                          <Typography className='edit_text button_name pl-2' >Edit</Typography>
                          
                        </button>
-                       <button className='delete_button' onClick={e =>handleOpenRemove(row)}> 
+                       <button className='delete_button ms-2' onClick={e =>handleOpenRemove(row)}> 
                          <img src={delete_svg} alt="delete icon" className="delete_icon" />
                          <Typography className='delete_text button_name'>Remove</Typography>
                        </button>
@@ -437,10 +469,9 @@ export default function UserProjectTable() {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-
+        /> 
       </Box>  
-       <AddProject open={mOpen} setOpen={setMOpen} onState={onState} setOnState={setOnState}/>
+        <AddProject open={mOpen} setOpen={setMOpen} onState={onState} setOnState={setOnState}/>
         <EditProject openEdit={openEdit} setOpenEdit={setOpenEdit} editData={editData} onState={onState} setOnState={setOnState} />
         <DeleteProject openRemove={openRemove} setOpenRemove={setOpenRemove} project={removeData} onState={onState} setOnState={setOnState} />
     </Box>

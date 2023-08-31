@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useGoogleSingInMutation } from "../../features/auth/authApi";
-import { googleAuth } from "../../features/auth/authSlice";
+import { userLoggedIn } from "../../features/auth/authSlice";
 import initializeFirebase from "../FirebaseInit";
 // initialize Firebase app
 initializeFirebase();
@@ -27,7 +27,7 @@ const useFirebase = () => {
   useEffect(() => {
     if(resData?.data){
       setUser(resData?.data)
-      dispatch(googleAuth(resData.data))
+      dispatch(userLoggedIn(resData.data))
       navigate(isDestination)
     }
   },[resData])

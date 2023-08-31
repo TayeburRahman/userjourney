@@ -210,7 +210,14 @@
   padding-left: 10px;
   color: #838383;
 }
-
+.project-add-textarea {
+  width: 533px;
+  height: 100px;
+  border: 1px solid #c5c5c5;
+  border-radius: 7px;
+  padding-left: 10px;
+  color: #838383;
+}
 .project-add-input_multiple {
   width: 533px;
   height: 38px;
@@ -227,9 +234,9 @@
   width: 156px;
   height: 38px;
   color: Grey !important;
-  border-radius: 10px;
-  border: 1px solid var(--grey-variant-6, #999);
-  background: none;
+  border-radius: 10px !important;
+  border: 1px solid var(--grey-variant-6, #999) !important;
+  background: none !important;
 }
 
 .button-add {
@@ -283,6 +290,7 @@
   border: none;
   color: white;
 }
+/* --------------------------- */
 @media only screen and (max-width: 930px) {
   .sub_sort_details {
     padding: 10px;
@@ -334,5 +342,13 @@
 
   .modal-main {
     padding: 20px;
+  }
+
+  .details_hed {
+    font-size: 15px !important;
+  }
+
+  .sub_sort_details {
+    height: 100px !important;
   }
 }

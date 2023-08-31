@@ -26,7 +26,9 @@ admin.initializeApp({
 /* Use Routes  */
 app.use("/api/v1/user", require("./router/user.router"));
 app.use('/api/v1/projects', require("./router/projects.route")); 
+app.use('/api/v1/product', require("./router/product.router")); 
  
+app.use("/uploads", express.static("./uploads"));
 
 
 /* testing api  */

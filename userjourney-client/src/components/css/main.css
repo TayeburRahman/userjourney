@@ -120,14 +120,6 @@
   color: var(--black, #000) !important;
 }
 
-/* ------  */
-.div-shadow {
-  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
-    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px !important;
-  height: 100%;
-  padding: 10px;
-  border-radius: 5px;
-}
 /* --------icon------------- */
 
 .nav_width {
@@ -139,12 +131,8 @@
   transform: 1s;
 }
 
-@media only screen and (max-width: 930px) {
-  .pee_pips_dashboard {
-    display: none;
-  }
-
-  .iconNone {
+@media only screen and (max-width: 920px) {
+  .dp-none-md-footer {
     display: none !important;
   }
 }

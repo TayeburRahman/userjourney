@@ -43,3 +43,16 @@ span.MuiBadge-badge.MuiBadge-standard.MuiBadge-anchorOriginTopRight.MuiBadge-anc
 p.MuiTablePagination-displayedRows.css-levciy-MuiTablePagination-displayedRows {
   margin: 0 !important;
 }
+/* --------------------open avatar--- */
+
+li.MuiButtonBase-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiMenuItem-root.MuiMenuItem-gutters.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+/* ----------------------app bar------------------------ */
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation16.MuiDrawer-paper.MuiDrawer-paperAnchorLeft.css-4t3x6l-MuiPaper-root-MuiDrawer-paper {
+  width: 100% !important;
+  background: #185518 !important;
+}

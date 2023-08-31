@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { apiSlice } from '../features/apiSlice'
-import authSliceReducer from '../features/auth/authSlice'
+import { default as authSliceReducer } from '../features/auth/authSlice'
 
 export const store = configureStore({
   // included fetcher reducer
   reducer: {
     [apiSlice.reducerPath]:apiSlice.reducer, 
-     auth: authSliceReducer, 
+     auth: authSliceReducer,  
 
   },
   // redux devTools false for production

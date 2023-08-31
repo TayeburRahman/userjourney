@@ -1,8 +1,12 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import HomeIcon from "@mui/icons-material/Home";
-import LeaderboardIcon from "@mui/icons-material/Leaderboard";
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import GroupsIcon from '@mui/icons-material/Groups';
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from '@mui/icons-material/Menu';
+import RedeemIcon from '@mui/icons-material/Redeem';
 import { Box, IconButton } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
@@ -14,8 +18,10 @@ import Toolbar from "@mui/material/Toolbar";
 import { styled } from "@mui/material/styles";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import noto_rocket from '../assets/noto_rocket.svg';
+import { userLoggedOut } from "../features/auth/authSlice";
+import useAdmin from "../hooks/useAdmin";
 const drawerWidth = 240;
 
 const Drawer = styled(MuiDrawer, {
@@ -53,9 +59,17 @@ const SideBar = () => {
   const dispatch = useDispatch();
   var w = window?.innerWidth;
   const auth = useSelector(state => state.auth); 
+  // const localAuth = localStorage?.getItem("_user");
+  //   const localAuthToken = localStorage?.getItem("_token");
+  //   const _token = JSON.parse(localAuthToken); 
+  //   const _user = JSON.parse(localAuth); 
+    const isAdmin = useAdmin()
+    
 
+     
 
-  console.log(auth)
+ 
+ 
 
    useEffect(()=>{ 
     
@@ -82,12 +96,12 @@ const SideBar = () => {
   const listItem = [
     {
       name: "Dashboard",
-      icon: <HomeIcon  />,
+      icon: <DashboardIcon  />,
       to: "/dashboard",
     },
     {
       name: "Products",
-      icon: <AccountCircleIcon   />,
+      icon: <RedeemIcon   />,
       to: "/dashboard/products",
     },
     {
@@ -97,25 +111,54 @@ const SideBar = () => {
     }, 
     {
       name: "My Users",
-      icon: <LeaderboardIcon />,
+      icon: <GroupsIcon />,
       to: "/dashboard/my_users",
     }, 
      
     {
       name: "Projects",
-      icon: <LeaderboardIcon />,
+      icon: <AccountTreeIcon />,
       to: "/dashboard/project/user_projects",
     }, 
     {
       name: "Credits",
-      icon: <LeaderboardIcon />,
+      icon: <CreditCardIcon />,
       to: "/dashboard/credits/user_credits",
     }, 
+    
   ];
 
+  const adminItem = [
+    {
+      name: "Admin",
+      icon: <AdminPanelSettingsIcon  />,
+      to: "/dashboard/admin/projects",
+    },
+    {
+      name: "Admin Products",
+      icon: <RedeemIcon   />,
+      to: "/dashboard/admin/products",
+    },
+    {
+      name: "Subscribe",
+      icon: <RedeemIcon   />,
+      to: "/dashboard/admin/subscribe ",
+    },
+    {
+      name: "Contact",
+      icon: <RedeemIcon   />,
+      to: "/dashboard/admin/contact ",
+    } 
+    
+  ];
+
+  
+const navigate = useNavigate()
+
   const logout = () => {
-    // dispatch(userLoggedOut());
-    // localStorage.clear();
+    dispatch(userLoggedOut());
+    localStorage.clear();
+    navigate("/home") 
   };
 
   return (
@@ -136,9 +179,7 @@ const SideBar = () => {
 
            <IconButton onClick={toggleDrawer} className="iconNone">
                <MenuIcon className="iconNone" /> 
-          </IconButton>
-   
-           
+          </IconButton> 
         </Box>
          
       </Toolbar>
@@ -146,7 +187,8 @@ const SideBar = () => {
 
       {/* Dashboard Dower Router  */}
       <List component="nav">
-        {listItem.map(({ name, icon, to }) => (
+
+      {listItem?.map(({ name, icon, to }) => (
           <Link className="router_link " to={to} key={to} >
             <ListItemButton
               className="routing_button mb-1"
@@ -159,7 +201,27 @@ const SideBar = () => {
               />
             </ListItemButton>
           </Link>
-        ))}
+        ))} 
+
+      {
+       isAdmin &&  adminItem?.map(({name, icon, to})=>(
+            <Link className="router_link " to={to} key={to} >
+            <ListItemButton
+              className="routing_button mb-1"
+              id={`${pathname === to ? "background": "background_white"}`}
+            >
+              <ListItemIcon id={`${pathname === to ? "background": "background_white"}`}>{icon}</ListItemIcon>
+              <ListItemText
+                className="font500"
+                primary={name} 
+              />
+            </ListItemButton>
+          </Link>
+          ))
+        }
+       
+    
+       
 
         <ListItemButton className="routing_button mb-1" onClick={logout}>
           <ListItemIcon id="background_white">

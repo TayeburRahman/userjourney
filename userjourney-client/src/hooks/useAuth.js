@@ -1,11 +1,15 @@
-import { useSelector } from "react-redux";
 
-export default function useAuth(){
-    const auth = useSelector(state => state.auth);
+export default function useAuth(){ 
+    const localAuth = localStorage?.getItem("_user");
+    const localAuthToken = localStorage?.getItem("_token");
+    const _token = JSON.parse(localAuthToken); 
+    const _user = JSON.parse(localAuth);
 
-    if(auth?.token && auth?.user){
+    if(_token && _user?.email){
         return true; 
     } else{
         return false;
     }
 }
+ 
+ 

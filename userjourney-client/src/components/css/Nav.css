@@ -1,0 +1,236 @@
+.app_bar {
+  background: none !important;
+  color: white !important;
+  width: 100 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.logo_nav {
+  width: 150px;
+}
+
+.pee_pips_nav {
+  font-family: George Rounded !important;
+  font-size: 20px !important;
+  font-style: normal;
+  font-weight: 400 !important;
+  line-height: 24px !important;
+  color: var(--white, #ffffff) !important;
+  margin: 0;
+  padding-left: 10px;
+}
+.pee_pips_footer {
+  font-family: George Rounded !important;
+  font-size: 20px !important;
+  font-style: normal;
+  font-weight: 400 !important;
+  line-height: 24px !important;
+  color: #1a2019 !important;
+  margin: 0;
+  padding-left: 10px;
+}
+.tool_bar {
+  height: 90px;
+}
+
+.lg_dp_none {
+  display: none !important;
+}
+
+/* height: 100px; */
+
+.shadow_none {
+  box-shadow: none !important;
+}
+.nav_route {
+  display: flex !important;
+  align-items: center !important;
+}
+.nav_route a {
+  font-family: George Rounded !important;
+  padding: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-right: 20px;
+  color: white !important;
+  text-decoration: none !important;
+}
+
+.nav_route_white {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.nav_route_white a {
+  font-family: George Rounded !important;
+  padding: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-right: 20px;
+  color: var(--black, #000) !important;
+  text-decoration: none !important;
+}
+
+/* -------------login button-------------- */
+
+.login_button_nav {
+  background-color: #fbd85d !important;
+  border-radius: 8px;
+  border-style: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 14px;
+  height: 38px;
+  width: 80px;
+  margin: 0;
+  text-decoration: none !important;
+  transition: color 100ms;
+  display: flex;
+  color: white !important;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ______________________ */
+
+.footer_tag {
+  font-family: George Rounded !important;
+  font-size: 20px !important;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px !important;
+  color: #3ec71c;
+  text-align: left !important;
+}
+
+.footer_link {
+  font-family: cursive !important;
+  font-size: 16px !important;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  text-decoration: none !important;
+  color: black !important;
+  margin-top: 15px;
+}
+
+.footer_link:hover {
+  text-decoration: underline !important;
+  color: #3ec71c !important;
+}
+
+.nav_width_footer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  transition: 1s;
+  transform: 1s;
+}
+
+.icon_footer img {
+  width: 40px !important;
+  height: 40px !important;
+  margin: 2px !important;
+  text-decoration: none !important;
+}
+
+.icon_footer {
+  text-decoration: none !important;
+}
+
+.icon_nav_togo {
+  width: 1em !important;
+  height: 1em !important;
+  fill: currentColor !important;
+  color: rgba(0, 0, 0, 0.54) !important;
+}
+.link_nav_tog {
+  color: none !important;
+  text-decoration: none !important;
+  color: rgba(0, 0, 0, 0.712) !important;
+  display: flex;
+  align-items: center !important;
+  font-family: cursive !important;
+  width: 100% !important;
+}
+/* -----------------------------app bar--------------- */
+.app_bar_main {
+  background: #185518e5 !important;
+  width: 100% !important;
+}
+
+.link_nav_dower {
+  width: 100% !important;
+  display: grid;
+  justify-content: start;
+  padding-left: 50px;
+}
+.dower_top_item {
+  display: flex;
+  justify-content: space-between;
+  color: white !important;
+}
+.dower_router_link {
+  text-decoration: none !important;
+  color: rgba(0, 0, 0, 0.829);
+}
+
+.dower_routing_text {
+  font-family: George Rounded !important;
+  font-size: 16px !important;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  text-align: left !important;
+}
+
+.J_c_f_s {
+  display: flex !important;
+  justify-content: flex-start;
+}
+#colorBlack {
+  color: rgba(0, 0, 0, 0.863) !important;
+}
+@media only screen and (max-width: 920px) {
+  .pee_pips_dashboard {
+    display: none;
+  }
+
+  .iconNone {
+    display: none !important;
+  }
+
+  .nav_route a {
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-right: 10px;
+    color: white !important;
+    text-decoration: none !important;
+  }
+  .nav_route_white a {
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-right: 10px;
+    text-decoration: none !important;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .nav_route {
+    display: none !important;
+  }
+  .nav_route_white {
+    display: none !important;
+  }
+
+  .lg_dp_none {
+    display: block !important;
+    color: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    margin-right: 10px !important;
+  }
+}

@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
@@ -5,11 +6,12 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import PhoneInput from 'react-phone-input-2';
+import { useDispatch } from "react-redux";
 import close_icon from "../../../assets/close.svg";
 import add_icon from "../../../assets/update.svg";
-
+import { useUpdateProfileInfoMutation } from "../../../features/auth/authApi";
+import { updateUserAuth } from "../../../features/auth/authSlice";
 
 
 const style = {
@@ -26,68 +28,58 @@ const style = {
 };
 
  
- 
 
 
 export default function UpdateProfile({ openEdit, setOpenEdit, editData, onState, setOnState }) {
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors },
-    } = useForm();
+ 
 
-    const [file, setFile] = useState()
-    const [phoneNum, setPhoneNum] = useState('254 ');
-    const [whatsAppNum, setWhatsAppNum] = useState('254 ');
+    const [error, setError] = useState('')
+    const [phoneNum, setPhoneNum] = useState('');
+    const [whatsAppNum, setWhatsAppNum] = useState('');
+    const [userName, setUserName] = useState(''); 
 
-
+    const [updateProfileInfo , { data: resData, error: responseError }] = useUpdateProfileInfoMutation();
     const localAuth = localStorage?.getItem("_user");
+    const _token = localStorage?.getItem("_token");
     const _user = JSON.parse(localAuth);
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        reset()
-    }, [])
-
-    console.log("phoneNum", phoneNum)
-
-    // const onSubmit = (data) => {
-    //     const formData = {
-    //         project_name: data.project_name,
-    //         bot_platform: data.bot_platform,
-    //         expected_sales: data.expected_sales, 
-    //         account_name: updateAccount,  
-    //         user_email: _user.email,
-    //         status: editData?.status
-    //     }; 
-
-    //     axios
-    //         .put(`http://localhost:5000/api/v1/projects/update_project/${editData?.id}`, { formData })
-    //         .then((res) => {
-
-    //             const storageRef = ref(storage, `/project/${_user?.email}/${data?.project_name}/${file?.name}`)
-    //             const uploadTask = uploadBytesResumable(storageRef, file);  
-
-    //             if(uploadTask){ 
-    //                 setOnState(onState? false : true);
-    //                 alert("Successfully update project!");
-    //                 setOpenEdit(false);
-    //                 reset();
-    //             }else{
-    //                 alert("Error can't upload file, Please check you file!");
-    //             }  
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // };
-    const constructor=(props) => {
-       
-       console.log(props)
-    }
+        setUserName(_user?.name)
+        setWhatsAppNum(_user?.wp_num? _user?.wp_num: '254 ')
+        setPhoneNum(_user?.phone_num? _user?.phone_num: '254 ') 
+    }, [openEdit])
 
 
 
+    useEffect(() => {
+      if (resData?.status === "success") {  
+        dispatch(updateUserAuth(resData.data))   
+        setOpenEdit(false)
+        alert("Successfully update your profile!");
+        setError('')  
+      }
+      if(resData?.status === "error") {
+        setError("Update request failed")
+      }
+    }, [resData])  
+   
+
+      const handleUpdate = async () => { 
+        const wp_number = whatsAppNum.length < 6 ? '' : whatsAppNum
+        const ph_number = phoneNum.length < 6 ? '' : phoneNum
+        
+        const useData = {
+            name: userName,
+            phone_num: ph_number,
+            wp_num: wp_number,
+            email: _user?.email
+          } 
+          
+          let userData = { ...useData }; 
+           await updateProfileInfo(userData)   
+
+      } 
 
     const handleClose = () => setOpenEdit(false);
 
@@ -112,10 +104,11 @@ export default function UpdateProfile({ openEdit, setOpenEdit, editData, onState
                         Edit Profile
                         </Typography>
                         <Box>
+                          {error && <Typography className="error">{error} !!</Typography>}
                             <div 
                                 className="d-grid"> 
                                 <label className="mt-2 color-gre" >Profile Name </label>
-                                <input className="form-control" type="text" required placeholder="Project Name" defaultValue={_user?.name}  />
+                                <input className="form-control" type="text" required placeholder="Project Name" defaultValue={userName} onBlur={e => setUserName(e.target.value)}  />
 
                                 <label className="mt-3 color-gre">Email (can no't change) </label>
                                 <input className="form-control" disabled type="text" required placeholder="Project Name" defaultValue={_user?.email}   />
@@ -124,8 +117,9 @@ export default function UpdateProfile({ openEdit, setOpenEdit, editData, onState
                                 <PhoneInput
                                 className="profile_phone "  
                                 placeholder="Enter phone number"
-                                defaultValue={_user?.phone_num} 
+                                defaultValue={phoneNum} 
                                 value={phoneNum}
+                                required
                                 onChange={phone=> setPhoneNum(phone)}/>
 
                                 <label className="mt-3 color-gre" >WhatsApp Phone Number </label>
@@ -133,14 +127,14 @@ export default function UpdateProfile({ openEdit, setOpenEdit, editData, onState
                                 className="profile_phone "  
                                 placeholder="Enter phone number"
                                 value={whatsAppNum}
-                                defaultValue={_user?.wp_num} 
+                                defaultValue={whatsAppNum} 
                                 onChange={phone=> setWhatsAppNum(phone)}/>  
                                
 
                                  <Box className="add-button-box">
-                                    <button className="mt-3 button-add"  >  <img src={add_icon} alt="logo" className="coles-icon" /> Update </button>
+                                    <button className="mt-3 button-add" onClick={handleUpdate} >  <img src={add_icon} alt="logo" className="coles-icon" /> Update </button>
 
-                                    <button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</button>
+                                    <Button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</Button>
                                 </Box>
                             </div>
                         </Box>

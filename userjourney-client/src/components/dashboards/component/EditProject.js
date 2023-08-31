@@ -1,4 +1,5 @@
 import { Select } from "@material-ui/core";
+import { Button } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Chip from '@mui/material/Chip';
@@ -9,14 +10,14 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Typography from "@mui/material/Typography";
 import { useTheme } from '@mui/material/styles';
 import axios from "axios";
-import { ref, uploadBytesResumable } from "firebase/storage";
+import { deleteObject, ref, uploadBytesResumable } from "firebase/storage";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import storage from "../../../Firebase/ConficStorage";
 import close_icon from "../../../assets/close.svg";
 import add_icon from "../../../assets/update.svg";
- 
+
 
 
 const style = {
@@ -29,21 +30,10 @@ const style = {
     border: "none",
     boxShadow: 24,
     borderRadius: "5px",
-     
+
 };
 
-const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-];
+
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -67,53 +57,86 @@ function getStyles(name, accountName, theme) {
 
 
 
-export default function EditProject({ openEdit, setOpenEdit, editData, onState,setOnState}) {
+export default function EditProject({ openEdit, setOpenEdit, editData, onState, setOnState }) {
     const {
         register,
-        handleSubmit, 
-        reset, 
+        handleSubmit,
+        reset,
         formState: { errors },
     } = useForm();
- 
-    const [file, setFile] =  useState()  
-    const [accountName, setAccountName] =  useState([]);
 
-    const theme = useTheme(); 
+    const [file, setFile] = useState()
+    const [fileName, setFileName] = useState()
+    const [accountName, setAccountName] = useState([]);
+    const [names, setSubUser] = useState([])
+    const theme = useTheme();
 
     const localAuth = localStorage?.getItem("_user");
-    const _user  = JSON.parse(localAuth); 
-    const updateAccount = accountName.length? accountName: editData?.account_name
+    const _user = JSON.parse(localAuth);
+    const updateAccount = accountName.length ? accountName : editData?.account_name
 
-  
-   useEffect(() => {
+    useEffect(() => {
         reset()
-      }, [editData])
+        setAccountName('')
+
+        axios.get(`http://localhost:5000/api/v1/user/sub_user/${_user?.email}`)
+            .then(res => {
+                setSubUser(res.data.users)
+            })
+    }, [editData])
+
+    useEffect(() => {
+        const fine_name = file ? file?.name : editData?.file_name
+        setFileName(fine_name)
+    }, [file])
+
 
     const onSubmit = (data) => {
+
+
+
         const formData = {
             project_name: data.project_name,
             bot_platform: data.bot_platform,
-            expected_sales: data.expected_sales, 
-            account_name: updateAccount,  
+            expected_sales: data.expected_sales,
+            account_name: updateAccount,
             user_email: _user.email,
-            status: editData?.status
-        }; 
+            status: editData?.status,
+            file_name: fileName,
+        };
 
         axios
             .put(`http://localhost:5000/api/v1/projects/update_project/${editData?.id}`, { formData })
             .then((res) => {
 
-                const storageRef = ref(storage, `/project/${_user?.email}/${data?.project_name}/${file?.name}`)
-                const uploadTask = uploadBytesResumable(storageRef, file);  
-        
-                if(uploadTask){ 
-                    setOnState(onState? false : true);
-                    alert("Successfully update project!");
-                    setOpenEdit(false);
-                    reset();
-                }else{
-                    alert("Error can't upload file, Please check you file!");
-                }  
+                if (file && data?.project_name === editData?.project_name) {
+                    const desertRef = ref(storage, `/project/${_user?.email}/${data?.project_name}/${editData?.file_name}`);
+                    deleteObject(desertRef).then(() => {
+                        const storageRef = ref(storage, `/project/${_user?.email}/${data?.project_name}/${file?.name}`)
+                        const uploadTask = uploadBytesResumable(storageRef, file);
+                        if (uploadTask) {
+                        } else {
+                            alert("Error can't upload file2, Please check you file!");
+                            return;
+                        }
+                    })
+
+                }
+
+                if (file && data?.project_name !== editData?.project_name) {
+                    const storageRef = ref(storage, `/project/${_user?.email}/${data?.project_name}/${file?.name}`)
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+                    if (uploadTask) {
+                    } else {
+                        alert("Error can't upload file2, Please check you file!");
+                        return;
+                    }
+                }
+
+                setOnState(onState ? false : true);
+                alert("Successfully update project!");
+                setOpenEdit(false);
+                reset();
             })
             .catch((error) => {
                 console.log(error);
@@ -164,31 +187,31 @@ export default function EditProject({ openEdit, setOpenEdit, editData, onState,s
 
                                 <label className="mt-2">Expected sales </label>
                                 <select className="project-add-input" defaultValue={editData?.expected_sales} required placeholder="Expected sales per month" {...register("expected_sales")} >
-                                    <option value="Platform your bot runs on"> Platform your bot runs on</option>
-                                    <option value="male">male</option>
-                                    <option value="other">other</option>
+                                <option value="0-300">0-300</option>
+                                    <option value="other">300-1000</option>
+                                    <option value="1000 - 10000">1000 - 10000</option>
+                                    <option value="10000 and above">10000 and above</option> 
                                 </select>
 
                                 <label className="mt-2">Bot Platform </label>
-                                <select {...register("bot_platform")} defaultValue={editData?.bot_platform} required className="project-add-input"  >
-                                    <option value="Platform your bot runs on">Platform your bot runs on</option>
-                                    <option value="male">male</option>
-                                    <option value="other">other</option>
-                                </select>
+                                <select {...register("bot_platform")} defaultValue={editData?.bot_platform} required className="project-add-input">  
+                                    <option value="MT5">MT5</option>
+                                    <option value="MT4">MT4</option>
+                                    <option value="other">Python</option>
+                                </select> 
+
+                                <label className="mt-2">Bot File existing:  <span style={{color:"#f1c93b", fontWeight:"500"}}>{editData?.file_name} </span> </label>
+                                <input className="project-add-input p-1" type='file' name="file" onChange={(e) => handleOnChange(e.target.files[0])} />
 
 
-                                <label className="mt-2">Bot File </label>
-                                <input className="project-add-input p-1" defaultValue={editData?.file} required type='file' name="file" onChange={(e) => handleOnChange(e.target.files[0])} />
-
-
-                                <label className="mt-2">Accounts</label> 
-                                <Select 
-                                    className="project-add-input_multiple" 
+                                <label className="mt-2">Accounts</label>
+                                <Select
+                                    className="project-add-input_multiple"
                                     multiple
                                     required
-                                    value={accountName?.length? accountName: editData?.account_name}
-                                    onChange={handleChange} 
-                                    input={<OutlinedInput id="select-multiple-chip" />} 
+                                    value={accountName?.length ? accountName : editData?.account_name}
+                                    onChange={handleChange}
+                                    input={<OutlinedInput id="select-multiple-chip" />}
                                     renderValue={(selected) => (
                                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                             {selected.map((value) => (
@@ -198,24 +221,25 @@ export default function EditProject({ openEdit, setOpenEdit, editData, onState,s
                                     )}
                                     MenuProps={MenuProps}
                                 >
-                                    {names.map((name) => (
+                                    {names?.map((user) => (
                                         <MenuItem
-                                            key={name}
-                                            value={name}
-                                            style={getStyles(name, accountName, theme)}
+                                            key={user?.email}
+                                            value={user?.email}
+                                            style={getStyles(user?.email, accountName, theme)}
                                         >
-                                            {name}
+                                            {user?.email}
                                         </MenuItem>
                                     ))}
-                                </Select> 
-                                
+
+                                </Select>
+
 
                                 {errors.exampleRequired && <span>This field is required</span>}
 
-                                <Box className="add-button-box"> 
-                                <button className="mt-3 button-add  " type="submit">  <img src={add_icon} alt="logo" className="coles-icon" /> Update </button>  
-                               
-                                <button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</button> 
+                                <Box className="add-button-box">
+                                    <button className="mt-3 button-add  " type="submit">  <img src={add_icon} alt="logo" className="coles-icon" /> Update </button>
+
+                                    <Button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</Button>
                                 </Box>
                             </form>
                         </Box>
@@ -225,4 +249,3 @@ export default function EditProject({ openEdit, setOpenEdit, editData, onState,s
         </div>
     );
 }
- 
