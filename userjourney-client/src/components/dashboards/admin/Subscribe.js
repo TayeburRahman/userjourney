@@ -1,4 +1,4 @@
-import { Avatar, Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -30,27 +30,32 @@ export default function Subscribe() {
     const [csvData, setCsvData] =  useState([]); 
 
     useEffect(()=>{ 
-        axios.get(`https://server.unwraptools.io/api/v1/email/get`)
-        .then(res => {
-           
-            setAllEmail(res?.data?.response ) 
+        axios.get("http://localhost:5000/api/v1/product/get_subscribe")
+        .then(res => { 
+            setAllEmail(res?.data?.subscribe ) 
           
         })
       },[])
+
+      console.log("allEmail", allEmail)
  
  
  
 
 
     return (
-         <Box>
+        <Box sx={{ width: '100%' }}>
+              <Box className='p-3 box_peeper' sx={{ width: '100%', mb: 2, pb:5 }}> 
+             <Typography id="transition-modal-title" variant="h6" component="h2">
+             Subscribe List
+              </Typography>
             <TableContainer >
-            <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <Table   size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow> 
-                        <TableCell align="right"> <span className='d-flex-jc-ac '>User</span></TableCell>
-                        <TableCell align="right"><span className='d-flex-jc-ac'> Email </span></TableCell>
-                        <TableCell align="right"><span className='d-flex-jc-ac'> Send Time </span></TableCell> 
+                        <TableCell align="right text-left"> <span className=' '>User</span></TableCell>
+                        <TableCell align="right text-left"><span className=' '> Email </span></TableCell>
+                        <TableCell align="right"><span className=' '> Send Time </span></TableCell> 
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -60,13 +65,13 @@ export default function Subscribe() {
                             sx={{ '&:last-child td, &:last-child th': { border: 0 }, borderBottom:"1px solid #bfbfbf"}} 
                         >
                             <TableCell component="th" scope="row">
-                               <span className='d-flex-jc-ac'> <Avatar className='me-2' src={email?.image} sx={{width:"40px", height:"40px"}}/> {email?.name} </span>
+                               <span className='d-flex-jc-ac'> {email?.name} </span>
+                            </TableCell>
+                            <TableCell align="text-center"> 
+                            <span className='text-center'> {email?.email} </span>
                             </TableCell>
                             <TableCell align="right"> 
-                            <span className='d-flex-jc-ac'> {email?.email} </span>
-                            </TableCell>
-                            <TableCell align="right"> 
-                            <span className='d-flex-jc-ac'>{email?.subscribe_time?.slice(0, 10)}</span>
+                            <span className='d-flex-jc-ac'>{email?.time}</span>
                             </TableCell> 
                         </TableRow>
                     ))}
@@ -74,12 +79,15 @@ export default function Subscribe() {
                
             </Table>
         </TableContainer>
-        <Box>
+        <Box className="mb-4">
         <CSVLink
         className="button-6 mt-4"
          data={allEmail}
        > Download CSV</CSVLink>  
         </Box>
          </Box>
+        </Box>
     );
 }
+
+// .slice(0, 10)

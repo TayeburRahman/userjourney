@@ -61,6 +61,7 @@ const googleAuthUser = async (req, res) => {
       role: "user",
       token: bearerToken,
       register_type: "google_authenticated",
+      viewer: [],
     };   
 
       const { token, ...others } = newUser 
@@ -246,29 +247,7 @@ const createSubUser = async (req, res) => {
         error: `${reqData?.email} This user email already exists`,
       });
     }
-    
-    const projectName = reqData?.project_name;   
-    const userEmail = reqData?.email;
  
-     //  get and filter new add projects 
-    // let projectRef = db.collection('projects')
-    // const dataDB = await projectRef.get()  
-    // const project = dataDB?.docs.map((doc) => ({id: doc.id, ...doc.data()})) 
-
-    // const filteredProject = project?.filter(proj =>
-    //   projectName?.some(color => proj?.project_name === color)
-    // );   
-
-   //  add user inset the projects 
-    // const updatedArray = filteredProject?.map((obj) => {
-    //   if (!obj.account_name.includes(userEmail)) {
-    //     obj.account_name.push(userEmail);
-    //     // obj.account.push(reqData);
-    //   } 
-    //   projectRef?.doc(obj?.id).update(obj) 
-    //   return obj;
-    // });
-  
 
     const userJson = {
       project_name: reqData?.project_name,
@@ -306,9 +285,7 @@ const createSubUser = async (req, res) => {
 const updateSubUser = async (req, res) => { 
 
   try { 
-    const reqData = req.body.formData;  
-  //  check user if else exists   
-    
+    const reqData = req.body.formData;   
     
     const userJson = {
       project_name: reqData?.project_name,
@@ -342,8 +319,7 @@ const updateSubUser = async (req, res) => {
 
 const getSubUserList = async (req, res) => {
   try {
-    const {author} = req.params; 
-    
+    const {author} = req.params;  
  
      const userRef = db.collection("users");
      const response = await userRef.get(); 
@@ -379,6 +355,29 @@ const getSubUser = async (req, res ) => {
    return res.status(500).json({status: "error", message: "server error"})
  }
 } 
+
+const getSubUserDetails = async (req, res) => {
+  try {
+    const {email} = req.params;  
+ 
+     const userRef = db.collection("users");
+     const response = await userRef.doc(email).get();  
+     const productDB = response.data()   
+     
+     console.log(productDB)
+
+     const project = productDB.viewer
+ 
+
+    return res.status(200).send({
+      status: "success",
+      project: project, 
+      message: "successfully get data for author",
+    });
+  } catch (error) {
+    return res.json({ status: "error", message: error.massages });
+  }
+};
 
 
 const deleteMyUser = async (req, res ) => {   
@@ -622,6 +621,7 @@ module.exports = {
   updateSubUser,
   deleteMyUser,
   getSubUser,
+  getSubUserDetails,
 
 
   // getLeaderboardUser,

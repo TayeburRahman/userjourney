@@ -242,7 +242,7 @@ export default function AdminProjectList() {
     <Box sx={{ width: '100%' }}>
       <Box className='p-3 box_peeper' sx={{ width: '100%', mb: 2 }}> 
            <Box className="dp_sh_flex_box">
-            <Typography className='add_project_text'>My Projects</Typography>
+            <Typography className='add_project_text'>All Projects</Typography>
  
            </Box> 
            {/* <AddCredits open={mOpen} setOpen={setMOpen} onState={onState} setOnState={setOnState}/> */}
@@ -372,10 +372,9 @@ export default function AdminProjectList() {
                     <TableCell align="right" className='border-left'>{row?.user_email}</TableCell>
                     <TableCell align="right" className='border-left account'>{row?.bot_platform}</TableCell>
                     <TableCell align="right" className='border-left platform'>
-                    <button className='credits_button' onClick={e =>handleOpenEdit(row)}>  
+                       <button className='credits_button' onClick={e =>handleOpenEdit(row)}>  
                          <AddCardIcon className='credits_icon'/>
                          <Typography className='credits_text button_name pl-2' >Add Credits</Typography>
-                         
                        </button>
                     </TableCell>
                     <TableCell align="right" className='border-left border-right'> 

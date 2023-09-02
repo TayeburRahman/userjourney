@@ -23,6 +23,7 @@ import delete_svg from '../../../assets/delete.svg';
 import edit_svg from '../../../assets/ep_edit.svg';
 import { projectListGet } from '../../../features/auth/authSlice';
 import useAdmin from '../../../hooks/useAdmin';
+import useSubUsers from '../../../hooks/useSubUsers';
 import useUsers from '../../../hooks/useUsers';
 import AddProject from './AddProject';
 import DeleteProject from './DeleteProject';
@@ -138,7 +139,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead() {
-
+  const isSubUsers = useSubUsers()
 
   return (
     <TableHead>
@@ -160,13 +161,15 @@ function EnhancedTableHead() {
             </TableSortLabel>
           </TableCell> 
 
-          <TableCell 
+          { !isSubUsers &&  <TableCell 
             className='border-left border-top account'
           >
             <TableSortLabel className='hed-title' >
             My Accounts
             </TableSortLabel>
           </TableCell> 
+
+          } 
 
           <TableCell 
             className='border-left border-top platform'
@@ -176,13 +179,22 @@ function EnhancedTableHead() {
             </TableSortLabel>
           </TableCell> 
           
-          <TableCell 
+          { !isSubUsers &&   <TableCell 
             className='border-left border-right border-top'
           >
             <TableSortLabel className='hed-title' >
             Action
             </TableSortLabel>
-          </TableCell> 
+          </TableCell>  
+          }
+            { isSubUsers &&   <TableCell 
+            className='border-left border-right border-top'
+          >
+            <TableSortLabel className='hed-title' >
+            Sales
+            </TableSortLabel>
+          </TableCell>  
+          } 
       </TableRow>
     </TableHead>
   );
@@ -217,7 +229,7 @@ export default function UserProjectTable() {
   const dispatch = useDispatch() 
   const isAdmin = useAdmin()
   const isUsers = useUsers()
-  
+  const isSubUsers = useSubUsers()
  
 
   useEffect(() => {
@@ -228,21 +240,20 @@ export default function UserProjectTable() {
         setAllProject(res.data?.project)  
         dispatch(projectListGet(res.data.project))  
       })
-    }else if(isUsers){ 
-
+    }else if(isUsers){  
       axios.get(`http://localhost:5000/api/v1/projects/get_project/${_user?.email}`)
       .then(res => { 
         setAllProject(res.data?.project)  
         dispatch(projectListGet(res.data.project))  
       } )
     }else{
-      axios.get(`http://localhost:5000/api/v1/projects/get_project/${_user?.email}`)
+      axios.get(`http://localhost:5000/api/v1/user/sub_user/details/${_user?.email}`)
       .then(res => { 
         setAllProject(res.data?.project)  
+        console.log(res.data.project)
         dispatch(projectListGet(res.data.project))  
       } )
     }
-      
     }, [onState])
 
   // page select top 
@@ -299,9 +310,13 @@ export default function UserProjectTable() {
     <Box sx={{ width: '100%' }}>
       <Box className='p-3 box_peeper' sx={{ width: '100%', mb: 2 }}> 
            <Box className="dp_sh_flex_box">
-            <Typography className='add_project_text'>My Projects</Typography>
+            <Typography className='add_project_text'>{isAdmin? "All": "My" } Projects</Typography>
 
-            <button onClick={handleOpen} className='add_project_button'> Add Project</button>   
+            {
+              !isSubUsers && <button onClick={handleOpen} className='add_project_button'> Add Project</button>   
+            }
+
+             
            </Box> 
            <AddProject open={mOpen} setOpen={setMOpen} onState={onState} setOnState={setOnState}/>
            <Box className="dp_sh_flex_box p-1 mb-3">
@@ -417,7 +432,7 @@ export default function UserProjectTable() {
               {visibleRows?.map((row, index) => { 
                 return (
                   <TableRow
-                    key={row.name}
+                    key={row?.name}
                   >
                     <TableCell
                       component="th"
@@ -425,31 +440,43 @@ export default function UserProjectTable() {
                       padding="none"
                       className='border-left pl-3'
                     >
-                      {row.project_name}
+                      {row?.project_name}
                     </TableCell>
-                    <TableCell align="right" className='border-left'>{row.status}</TableCell>
-                    <TableCell align="right" className='border-left account'
+                    <TableCell align="right" className='border-left'> 
+                       {row?.status} 
+                      </TableCell>
+
+                     { !isSubUsers && <TableCell align="right" className='border-left account'
                     style={{paddingTop: "0", paddingBottom: "0"}}
                     >{ 
                     row?.account_name.map((email) =>(
                       <> {email}, </>
                     ))
-                    }</TableCell>
-                    <TableCell align="right" className='border-left platform'>  {row.bot_platform}</TableCell>
-                    <TableCell align="right" className='border-left border-right'> 
-                     <Box className="w-100 d-flex dp_c_sa">
-                       <button className='edit_button' onClick={e =>handleOpenEdit(row)}> 
-                         <img src={edit_svg} alt="login" className="edit_icon" />
-                         <Typography className='edit_text button_name pl-2' >Edit</Typography>
-                         
-                       </button>
-                       <button className='delete_button ms-2' onClick={e =>handleOpenRemove(row)}> 
-                         <img src={delete_svg} alt="delete icon" className="delete_icon" />
-                         <Typography className='delete_text button_name'>Remove</Typography>
-                       </button>
-                     </Box>
-                    </TableCell>
-                  </TableRow>
+                    }</TableCell>}
+                    <TableCell align="right" className='border-left platform'>  {row?.bot_platform}</TableCell>
+                   
+                    { !isSubUsers && 
+                      <TableCell align="right" className='border-left border-right'> 
+                      <Box className="w-100 d-flex dp_c_sa">
+                        <button className='edit_button' onClick={e =>handleOpenEdit(row)}> 
+                          <img src={edit_svg} alt="login" className="edit_icon" />
+                          <Typography className='edit_text button_name pl-2' >Edit</Typography>
+                          
+                        </button>
+                        <button className='delete_button ms-2' onClick={e =>handleOpenRemove(row)}> 
+                          <img src={delete_svg} alt="delete icon" className="delete_icon" />
+                          <Typography className='delete_text button_name'>Remove</Typography>
+                        </button>
+                      </Box>
+                     </TableCell>
+                    }
+
+                      { isSubUsers && 
+                    <TableCell align="right" className='border-left border-right'>  {row?.expected_sales}</TableCell>
+                  }
+
+                  </TableRow> 
+
                 );
               })}
               {emptyRows > 0 && (

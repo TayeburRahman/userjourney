@@ -1,4 +1,5 @@
 const admin = require("firebase-admin");
+const { currentDateTime } = require("../services/currentdatetime");
 let db=admin.firestore();
 
 const createProduct = async (req, res ) => {  
@@ -120,6 +121,46 @@ const deleteProduct = async (req, res ) => {
    }
 } 
 
+const createSubscribe = async (req, res ) => {   
+  try { 
+    const subscribeData = req.body?.formData  
+
+    const {currentDateS,currentTimeS} = currentDateTime()
+
+    const data = {
+      name: subscribeData.name, 
+      email: subscribeData.email,
+      time: currentDateS
+  };
+
+    let subscribeDB = db.collection('subscribe')
+    await subscribeDB.add(data)  
+  
+   return res.status(201).json({ 
+    status: "success",
+    message:'Subscribe successfully'});
+ } catch (error) {
+   return res.status(500).json({status: "error", message: error})
+ }
+}
+
+const getSubscribe = async (req, res ) => {   
+  try { 
+    
+    const subscribeDB = db.collection("subscribe") 
+    const snapshot = await subscribeDB.get()  
+    const list = snapshot?.docs.map((doc) => ({id: doc.id, ...doc.data()}))  
+
+    console.log('data',list)
+   return res.status(201).json({ 
+    subscribe: list,
+    status: "success",
+    message:'Subscribe successfully'});
+ } catch (error) {
+   return res.status(500).json({status: "error", message: error})
+ }
+}
+
 
 module.exports = {
     createProduct,
@@ -127,4 +168,6 @@ module.exports = {
     getProduct,
     getSingleProduct,
     deleteProduct,
+    createSubscribe,
+    getSubscribe,
 }

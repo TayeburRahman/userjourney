@@ -1,3 +1,4 @@
+import { IconButton } from '@material-ui/core';
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -7,94 +8,45 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from '@mui/icons-material/Menu';
 import RedeemIcon from '@mui/icons-material/Redeem';
-import { Box, IconButton } from "@mui/material";
-import Divider from "@mui/material/Divider";
-import MuiDrawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Toolbar from "@mui/material/Toolbar";
-import { styled } from "@mui/material/styles";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import * as React from "react";
+import { useDispatch } from 'react-redux';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import noto_rocket from '../assets/noto_rocket.svg';
-import { userLoggedOut } from "../features/auth/authSlice";
-import useAdmin from "../hooks/useAdmin";
-import useSubUsers from "../hooks/useSubUsers";
-const drawerWidth = 240;
-
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  "& .MuiDrawer-paper": {
-    position: "relative",
-    whiteSpace: "nowrap",
-    // backgroundColor: "#82CD47",
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    boxSizing: "border-box",
-    ...(!open && {
-      overflowX: "hidden",
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      width: theme.spacing(7),
-      [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9),
-      },
-    }),
-  },
-}));
-const SideBar = () => {
-  const [open, setOpen] = React.useState(true);
-  const [noneDisplay, setDisplayNone] = React.useState(false);
-  const [user, setCurrentUser] = React.useState(false);
-
+import { userLoggedOut } from '../features/auth/authSlice';
+import useAdmin from '../hooks/useAdmin';
+import useAuth from '../hooks/useAuth';
+import useSubUsers from '../hooks/useSubUsers';
+export default function AppBarDashboard({logoGreen}) {
   const { pathname } = useLocation();
+  const isAuth = useAuth()
+  const isAdmin = useAdmin()
+  const isSubUser = useSubUsers() 
   const dispatch = useDispatch();
-  var w = window?.innerWidth;
-  const auth = useSelector(state => state.auth); 
-  // const localAuth = localStorage?.getItem("_user");
-  //   const localAuthToken = localStorage?.getItem("_token");
-  //   const _token = JSON.parse(localAuthToken); 
-  //   const _user = JSON.parse(localAuth); 
-    const isAdmin = useAdmin()
-    const isSubUser = useSubUsers()
-    
-
-     
+  const [state, setState] = React.useState({ 
+    left: false, 
+  });
 
  
- 
 
-   useEffect(()=>{ 
-    
-    if(w < 920){
-      setOpen(false); 
-      setDisplayNone(false) 
-    }else{
-      setOpen(true);
-    }  
-   },[w,])
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event &&
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return;
+    }
 
-   useEffect(()=>{  
-    setCurrentUser(auth)
-   },[pathname])
- 
- 
-
-  const toggleDrawer = async () => { 
-      setOpen(!open); 
-      open ? setDisplayNone(true) : setDisplayNone(false)
+    setState({ ...state, [anchor]: open });
   };
-  // list item for sidebar
 
+ 
   const listItem = [
     {
       name: "Dashboard",
@@ -157,8 +109,7 @@ const SideBar = () => {
     
   ];
 
-  
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const logout = () => {
     dispatch(userLoggedOut());
@@ -166,32 +117,28 @@ const navigate = useNavigate()
     navigate("/home") 
   };
 
-  return (
-    <Drawer variant="permanent" open={open}>
-      <Toolbar
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
-          px: [1],
-        }}
-      >
-        <Box className="nav_width">
-           <Box className="nav_width" id={`${noneDisplay && "noneDisplay"}`}>
-              <img src={noto_rocket} alt="logo" className="noto_rocket" />
-              <h6 className="pee_pips_dashboard">PeepPips</h6> 
-           </Box>
 
-           <IconButton onClick={toggleDrawer} className="iconNone">
-               <MenuIcon className="iconNone" /> 
+
+
+  const list = (anchor) => (
+    <Box 
+      role="presentation"
+      className="app_bar_main"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >  
+    <Box className="dower_top_item mt-4 mb-5">
+           <Box className="d-flex pl-5"  >
+           <img src={noto_rocket} alt="logo" className="noto_rocket" />
+                            <h6 className="pee_pips_nav">PeepPips</h6>
+            </Box>
+
+           <IconButton onClick={toggleDrawer} className="pr-5" sx={{color:"white"}}>
+               <MenuIcon  sx={{color:"white"}} /> 
           </IconButton> 
-        </Box>
-         
-      </Toolbar>
-      <Divider />
-
-      {/* Dashboard Dower Router  */}
-      <List component="nav">
+        </Box> 
+     <Box>
+     <List component="nav">
 
       {listItem?.map(({ name, icon, to }) => (
           <Link className="router_link " to={to} key={to} >
@@ -256,9 +203,35 @@ const navigate = useNavigate()
           />
         </ListItemButton>
       </List>
-    </Drawer>
+     </Box>
+        
+    </Box>
   );
-};
 
-export default SideBar;
- 
+  return (
+    <div>
+      {['left'].map((anchor) => (
+        <React.Fragment key={anchor}> 
+          <IconButton onClick={toggleDrawer(anchor, true)}
+                            className='lg_dp_none'
+                            size="large"
+                            edge="start"
+                            aria-label="menu"
+                            sx={{ mr: 2 }}
+                        >
+                            <MenuIcon id="colorBlack" />
+                        </IconButton> 
+          <SwipeableDrawer
+            anchor={anchor}
+            open={state[anchor]}
+            onClose={toggleDrawer(anchor, false)}
+            onOpen={toggleDrawer(anchor, true)}
+            className='dower_navigation'
+          >
+            {list(anchor)}
+          </SwipeableDrawer>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}

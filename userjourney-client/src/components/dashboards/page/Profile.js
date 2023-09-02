@@ -40,7 +40,7 @@ const handleUpdate = () =>{
              <div className=" p-3 row">
              <div className="d-flex property_end col-sm-12 col-md-6 col-lg-6">
                <img src={logo} alt="logo" className="profile_image" />
-               <div className="d-grid ml-1" >
+               <div className="d-grid ml-1 " >
                 <Typography className="profile_title"  >
                        {_user?.name}
                 </Typography>
@@ -62,7 +62,7 @@ const handleUpdate = () =>{
            </div>
         </div>
 
-        <div>
+        <div className="mt-5">
             <div className=" p-3 row mt-5">
                 <div className=" col-sm-12 col-md-6 col-lg-6 mt-3">
                   <Typography className="phone_text">Phone Number</Typography> 

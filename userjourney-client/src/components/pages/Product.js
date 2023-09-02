@@ -2,6 +2,7 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { Button, Container } from '@mui/material';
 import InputBase from '@mui/material/InputBase';
 import { alpha, styled } from '@mui/material/styles';
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './sheard/NavBar';
@@ -59,7 +60,24 @@ function Products() {
         if (!_user?.email) {
             navigate('/login')
             return;
-        }
+        } 
+
+        const formData = {
+            name: _user.name, 
+            email: emailSubscribe,
+        }; 
+        axios
+            .post("http://localhost:5000/api/v1/product/add_subscribe", { formData })
+            .then((res) => {  
+                setEmailSubscribe('')     
+                    alert(`Hi,${_user.name}. Subscribe You Successfully!`); 
+                     
+            })
+            .catch((error) => {
+            
+                console.log(error);
+            });
+    
     }
     return (
         <div className='products'>
@@ -85,8 +103,10 @@ function Products() {
                                             <MailOutlineIcon />
                                         </SearchIconWrapper>
                                         <StyledInputBase
-                                            onSelect={e => setEmailSubscribe(e.target.value)}
+                                            
+                                            onBlur={e => setEmailSubscribe(e.target.value)}
                                             className='email_filed'
+                                            value={emailSubscribe}
                                             placeholder="Enter your e-mail address"
                                         />
                                     </Search>

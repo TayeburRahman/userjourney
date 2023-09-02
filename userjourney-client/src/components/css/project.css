@@ -42,11 +42,19 @@
 }
 .result_day {
   font-family: George Rounded;
-  font-size: 10px;
+  font-size: 8px;
   font-style: normal;
   line-height: 24px;
   margin: 0;
   padding-left: 5px;
+}
+#activeColor {
+  color: #31a10a;
+  font-family: George Rounded;
+}
+#InactiveColor {
+  color: #a10a0a;
+  font-family: George Rounded;
 }
 .content_a_c {
   display: flex;
@@ -147,6 +155,48 @@
   font-weight: 400;
   line-height: 24px;
 }
+.deactive_button {
+  height: 30.667px;
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 92px;
+  height: 31px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  border: 1px solid #ffd900;
+  background: white;
+}
+.deactive_text {
+  font-family: George Rounded !important;
+  font-size: 14px;
+  font-style: normal !important;
+  font-weight: 400;
+  line-height: 24px;
+  color: #ffd900;
+}
+.inactive_button {
+  height: 30.667px;
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 92px;
+  height: 31px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  border: 1px solid #9bc407;
+  background: white;
+}
+.inactive_text {
+  font-family: George Rounded !important;
+  font-size: 14px;
+  font-style: normal !important;
+  font-weight: 400;
+  line-height: 24px;
+  color: #9bc407;
+}
 .delete_button {
   height: 30.667px;
   width: auto;
@@ -172,7 +222,29 @@
   line-height: 24px;
   color: #a10a0a;
 }
+.red_box {
+  height: 10px;
+  width: 10px;
+  background: #a10a0a;
+  border-radius: 50px;
+  margin-right: 5px;
+}
+.deductions {
+  color: #a10a0a;
+  font-family: cursive !important;
+}
 
+.green_box {
+  height: 10px;
+  width: 10px;
+  background: #31a10a;
+  border-radius: 50px;
+  margin-right: 5px;
+}
+.green_text {
+  color: #31a10a;
+  font-family: cursive !important;
+}
 .edit_button {
   display: flex;
   align-items: center;
@@ -309,6 +381,17 @@
   .delete_button {
     width: auto;
   }
+  .result_day {
+    font-family: George Rounded;
+    font-size: 7px;
+    font-style: normal;
+    line-height: 24px;
+    margin: 0;
+    padding-left: 5px;
+  }
+  .details_hed {
+    font-size: 14px !important;
+  }
 }
 
 .modal-main {
@@ -345,10 +428,13 @@
   }
 
   .details_hed {
-    font-size: 15px !important;
+    font-size: 14px !important;
   }
 
   .sub_sort_details {
     height: 100px !important;
+  }
+  .sub_sort_details {
+    padding: 7px;
   }
 }

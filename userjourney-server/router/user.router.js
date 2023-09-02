@@ -12,6 +12,7 @@ const {
   deleteMyUser,
   getAllUser,
   getSubUser,
+  getSubUserDetails,
 } = require("../controllers/user.controllers");
 const upload = require("../middleware/uploadImage"); 
 
@@ -30,6 +31,9 @@ router.route("/sub_user").get(getSubUser);
 router.route("/sub_user/:author").get(getSubUserList);
 router.route("/sub_user/update/:email").put(updateSubUser);
 router.route("/sub_user/delete/:id").delete(deleteMyUser);
+router.route("/sub_user/details/:email").get(getSubUserDetails);
+
+ 
 
   
 

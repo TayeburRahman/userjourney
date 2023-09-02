@@ -88,7 +88,7 @@ export default function AddProduct({ open, setOpen, onState, setOnState }) {
                 <Fade in={open}>
                     <Box sx={style} className="modal-main">
                         <Typography id="transition-modal-title" variant="h6" component="h2">
-                            Add New Project
+                            Add New Product
                         </Typography>
                         <Box>
                             <form onSubmit={handleSubmit(onSubmit)} className="d-grid">

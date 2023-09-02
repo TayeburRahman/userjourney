@@ -298,7 +298,7 @@ export default function UserListTable() {
       <Box className='p-3 box_peeper' sx={{ width: '100%', mb: 2 }}>
 
            <Box className="dp_sh_flex_box">
-            <Typography className='add_project_text'>My Users</Typography>
+            <Typography className='add_project_text'> {isAdmin? "All": "My" } Users</Typography>
 
             <button onClick={handleOpen} className='add_project_button'> Add Users</button>   
            </Box> 
@@ -427,7 +427,7 @@ export default function UserListTable() {
                     >
                       {row?.name}
                     </TableCell>
-                    <TableCell align="right" className='border-left'>{row?.project_name?.length}</TableCell>
+                    <TableCell align="right" className='border-left'>{row?.trading_account_number}</TableCell>
                     <TableCell align="right" className='border-left account'>{row?.email}</TableCell>
                     <TableCell align="right" className='border-left platform'>{row?.broker}</TableCell>
                     <TableCell align="right" className='border-left border-right'> 

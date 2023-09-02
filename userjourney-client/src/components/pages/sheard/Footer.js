@@ -8,7 +8,6 @@ import logo_nav from '../../../assets/logo.jpg'
 import mt_icon from '../../../assets/mt_icon.svg'
 import towtr_ion from '../../../assets/towtr_ion.svg'
 import wp_icon from '../../../assets/wp_icon.svg'
-import youtub_icon from '../../../assets/youtub_icon.svg'
 
 function Footer() {
 
@@ -28,7 +27,7 @@ function Footer() {
                         <Link className='icon_footer' href=''><img src={towtr_ion} alt="twitter icon" className="noto_rocket" /> </Link>
                         <Link className='icon_footer' href=''><img src={instra_icon} alt="instagram icon" className="noto_rocket" /> </Link>
                         <Link className='icon_footer' href=''><img src={mt_icon} alt="mega icon" className="noto_rocket" /> </Link>
-                        <Link className='icon_footer' href=''><img src={youtub_icon} alt="YouTube icon" className="noto_rocket" /> </Link>
+                        {/* <Link className='icon_footer' href=''><img src={youtub_icon} alt="YouTube icon" className="noto_rocket" /> </Link> */}
                     </div>
                 </div>
                 <div className='col-lg-3 col-sm-12 col-md-4 mb-5 d-grid text-left dp-none-md-footer'>  

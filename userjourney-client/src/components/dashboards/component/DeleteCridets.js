@@ -30,11 +30,12 @@ const style = {
 
 
 export default function DeleteCridets({ openRemove, setOpenRemove, removeData, onState,setOnState}) {
- 
+
 
     const handleOnClick = (data) => { 
+        const email = removeData?.account_name
         axios
-            .delete(`http://localhost:5000/api/v1/projects/delete/credits/${removeData?.project_id}/and/${removeData.id}`)
+            .put(`http://localhost:5000/api/v1/projects/delete/credits/${removeData?.project_id}/and/${removeData.id}`,{email})
             .then((res) => {
                 setOnState(onState? false : true); 
                 setOpenRemove(false); 

@@ -21,7 +21,7 @@ function Home() {
                         <div className='row padding_bottom_50'>
                             <div className='col-sm-12  col-md-6 col-lg-6 padding_top_50'>
                                 <h4 className='text_large_white text-left padding_bottom_50 mt-5'>
-                                    Powering your  <span className='text_large_green'> trading</span> success.
+                                    Powering your  <span className='text_large_yellow'> trading</span> success.
                                 </h4>
                                 <p className='text_sm_white text-left padding_bottom_50'>We help you turn your manual coding strategies into automated bots that you can resell on our platform and make an extra income.</p>
                                 <div className='text-left  '>
@@ -52,10 +52,10 @@ function Home() {
                     </h4>
                     <p className='text_sm_black text-left '>We help you turn your manual coding strategies into automated bots that you can resell on our platform and make an extra income.</p>
                 </div>
-                <div className='col-sm-12 col-md-6 col-lg-6 position_relative  mt-5'>
+                <div className='col-sm-12 col-md-6 col-lg-6 position_relative '>
                     <img src={desk_image} alt="logo" className="position_absolute" />
                 </div>
-                <div className='col-sm-12  col-md-6 col-lg-6  mt-5 mt-none-sm mx-w-600'>
+                <div className='col-sm-12  col-md-6 col-lg-6  mt-3 mt-none-sm mx-w-600'>
                     <div className='md-none-dp pt-5'>
                         <h4 className='text_large_green text-left padding_bottom_50 '>
                             What’s Included
@@ -99,7 +99,7 @@ function Home() {
                 <div className='bg-image-features'>
                     <Container>
                         <div className='pt-5 text-left '>
-                            <h4 className='text_large_green text-center-md padding_bottom_50 pt-4 letter_spacing'>
+                            <h4 className='text_large_yellow text-center-md padding_bottom_50 pt-4 letter_spacing'>
                                 Key Features of PeepPips
                             </h4>
                             <p className='text_sm_white text-left pb-3 mb-5'>PeepPips is an all-in-one platform for building fast, testable strategies in a matter of days. It offers a range of exciting features for traders. Some of the key features are:</p>

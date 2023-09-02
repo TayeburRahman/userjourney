@@ -1,4 +1,4 @@
-const { createProduct, updateProduct, getProduct, getSingleProduct, deleteProduct } = require("../controllers/product.controllers"); 
+const { createProduct, updateProduct, getProduct, getSingleProduct, deleteProduct, createSubscribe, getSubscribe } = require("../controllers/product.controllers"); 
 
 
   const upload = require("../middleware/uploadImage"); 
@@ -10,11 +10,9 @@ const { createProduct, updateProduct, getProduct, getSingleProduct, deleteProduc
   router.route("/get_product").get(getProduct);  
   router.route("/get_product/:id").get(getSingleProduct);
   router.route("/delete_product/:id").delete(deleteProduct);
-  router.route("/get_subscribe").get();
-  router.route("/get_subscribe").delete();
- 
-
-   
+  router.route("/add_subscribe").post(createSubscribe);
+  router.route("/get_subscribe").get(getSubscribe);
+  
   
     
   

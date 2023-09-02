@@ -19,8 +19,6 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
- 
-
 
 
 /* Use Routes  */

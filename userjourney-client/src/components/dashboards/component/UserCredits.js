@@ -162,6 +162,7 @@ function EnhancedTableHead() {
             Credit
             </TableSortLabel>
           </TableCell> 
+ 
 
           {
             isAdmin &&   <TableCell 
@@ -200,9 +201,7 @@ export default function UserCredits() {
   const _user  = JSON.parse(localAuth); 
   const {credits: rows}   = useSelector((state) => state.auth);
   const dispatch = useDispatch()
-  const isAdmin = useAdmin()
-
-  // console.log("rows", rows); 
+  const isAdmin = useAdmin() 
   
   useEffect(() => {
       if(isAdmin) {
@@ -263,15 +262,53 @@ export default function UserCredits() {
     setRemoveData(data)
   }
 
+  const handleDeactivate = (data) => {
+    
+    axios
+            .put(`http://localhost:5000/api/v1/projects/deactivate/${data?.id}`, { data })
+            .then((res) => {  
+                    setOnState(onState ? false : true);
+                    alert("Successfully deactivate this credits!"); 
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+  }
+
+  const handleInactivate = (data) => {
+    axios
+    .put(`http://localhost:5000/api/v1/projects/inactivate/${data?.id}`, { data })
+    .then((res) => {  
+            setOnState(onState ? false : true);
+            alert("Successfully deactivate this credits!"); 
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+  }
+
+
+   
+
 
   return (
     <Box sx={{ width: '100%' }}>
       <Box className='p-3 box_peeper' sx={{ width: '100%', mb: 2 }}>
 
-           <Box className="dp_sh_flex_box">
-            <Typography className='add_project_text'>My Users</Typography>
+           <Box className="dp_sh_flex_box"> 
+            {isAdmin ?(
+              <Typography className='add_project_text '>All Credits</Typography>
+            ):(
+              <Typography className='add_project_text '>My Credits</Typography>
+            )}
 
-       
+             <div className='d-flex'> 
+             <div className='red_box'></div> <Typography className='deductions mr-3'>Deductions</Typography> 
+             <div className='green_box'></div> <Typography className='green_text'>Rewards</Typography> 
+             </div>
+             <div className='d-flex'> 
+           
+             </div>
            </Box>  
            <Box className="dp_sh_flex_box p-1 mb-3">
            <Box className="df_ai">
@@ -398,17 +435,35 @@ export default function UserCredits() {
                       {row?.project_name}
                     </TableCell>
                     <TableCell align="right" className='border-left'>{row?.date} {row?.time}</TableCell>
-                    <TableCell align="right" className='border-left account'>$ {row?.amount}</TableCell> 
+                    <TableCell align="right" className='border-left account' 
+                    id={`${row.status === 'active'?"activeColor":"InactiveColor"}`}
+                    >
+                      {row.status === 'active'? '+ $': '- $' }
+                      {row?.amount}
+                      </TableCell> 
+                 
                     {
                       isAdmin &&  <TableCell align="right" className='border-left account'>
                         {/* <button className='edit_button' onClick={e =>handleOpenEditUser(row)}> 
                          <img src={edit_svg} alt="login" className="edit_icon" />
                          <Typography className='edit_text button_name pl-2' >Edit</Typography> 
-                       </button> */}
+                       </button> */} 
+                      <div className='d-flex dp_c_sa'>
+                      {
+                        row.status === 'active' &&  <button className='deactive_button' onClick={e =>handleDeactivate(row)}>  
+                        <Typography className='deactive_text button_name'> deactive</Typography>
+                      </button>
+                       }
+                       {
+                        row.status === 'panging' &&  <button className='inactive_button' onClick={e =>handleInactivate(row)}>  
+                        <Typography className='inactive_text button_name'> inactive</Typography>
+                      </button>
+                       }
                        <button className='delete_button' onClick={e =>handleOpenRemove(row)}> 
-                         <img src={remove_icon} alt="delete icon" className="delete_icon" />
-                         <Typography className='delete_text button_name'>Remove</Typography>
+                         <img src={remove_icon} alt="delete icon" className="delete_icon" /> 
+                         <Typography className='delete_text button_name'> remove</Typography>
                        </button>
+                        </div>
 
                       </TableCell>  
                     } 

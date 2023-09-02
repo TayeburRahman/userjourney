@@ -1,4 +1,4 @@
-const { createProjects, updateProjects, getProjects, deleteProjects, getUserProjects, getAllProjects, getAllUserProjects, addNewCredits, getAdminCredits, deleteCredits, getUsersCredits } = require("../controllers/projects.controllers");
+const { createProjects, updateProjects, getProjects, deleteProjects, getUserProjects, getAllProjects, getAllUserProjects, addNewCredits, getAdminCredits, deleteCredits, getUsersCredits, deactivateCredits, activateCredits } = require("../controllers/projects.controllers");
  
   
   const router = require("express").Router();
@@ -11,7 +11,9 @@ const { createProjects, updateProjects, getProjects, deleteProjects, getUserProj
   router.route("/add/credits").post(addNewCredits);
   router.route("/admin/credits").get(getAdminCredits);
   router.route("/users/credits/:email").get(getUsersCredits);
-  router.route("/delete/credits/:id/and/:creditsID").delete(deleteCredits);
+  router.route("/delete/credits/:id/and/:creditsID").put(deleteCredits);
+  router.route("/deactivate/:id").put(deactivateCredits);
+  router.route("/inactivate/:id").put(activateCredits);
 
    
    

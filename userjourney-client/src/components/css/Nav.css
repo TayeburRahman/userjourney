@@ -99,7 +99,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 24px !important;
-  color: #3ec71c;
+  color: #1a5d1a;
   text-align: left !important;
 }
 
@@ -116,7 +116,7 @@
 
 .footer_link:hover {
   text-decoration: underline !important;
-  color: #3ec71c !important;
+  color: #1a5d1a !important;
 }
 
 .nav_width_footer {
