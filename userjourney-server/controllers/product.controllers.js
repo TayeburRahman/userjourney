@@ -150,8 +150,7 @@ const getSubscribe = async (req, res ) => {
     const subscribeDB = db.collection("subscribe") 
     const snapshot = await subscribeDB.get()  
     const list = snapshot?.docs.map((doc) => ({id: doc.id, ...doc.data()}))  
-
-    console.log('data',list)
+ 
    return res.status(201).json({ 
     subscribe: list,
     status: "success",
@@ -160,6 +159,58 @@ const getSubscribe = async (req, res ) => {
    return res.status(500).json({status: "error", message: error})
  }
 }
+
+const createBroker = async (req, res ) => {   
+  try { 
+
+    const broker = req.body?.broker
+ 
+    const brokerData = {
+      name: broker,
+    }
+ 
+    const brokersDB = db.collection("brokers") 
+    await brokersDB.add(brokerData)    
+
+   return res.status(201).json({  
+    status: "success",
+    message:'Brokers add successfully'});
+ } catch (error) {
+   return res.status(500).json({status: "error", message: error})
+ }
+}
+
+const getAllBrokers = async (req, res ) => {   
+  try { 
+    
+    const brokersDB = db.collection("brokers") 
+    const snapshot = await brokersDB.get()  
+    const list = snapshot?.docs.map((doc) => ({id: doc.id, ...doc.data()}))  
+
+    console.log('data',list)
+   return res.status(201).json({ 
+    brokers: list,
+    status: "success",
+    message:'Brokers get successfully'});
+ } catch (error) {
+   return res.status(500).json({status: "error", message: error})
+ }
+}
+
+const deleteBroker = async (req, res ) => {   
+  try { 
+    const {id} = req.params 
+
+    let brokersDB = db.collection('brokers')
+    await brokersDB.doc(id).delete(); 
+  
+   return res.status(201).json({ 
+    status: "success",
+    message:'Broker delete successfully'});
+ } catch (error) {
+   return res.status(500).json({status: "error", message: "server error"})
+ }
+} 
 
 
 module.exports = {
@@ -170,4 +221,7 @@ module.exports = {
     deleteProduct,
     createSubscribe,
     getSubscribe,
+    createBroker,
+    getAllBrokers,
+    deleteBroker,
 }

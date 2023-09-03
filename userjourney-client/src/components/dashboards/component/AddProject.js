@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import storage from "../../../Firebase/ConficStorage";
 import add_icon from "../../../assets/add.svg";
 import close_icon from "../../../assets/close.svg";
- 
+
 
 
 const style = {
@@ -29,7 +29,7 @@ const style = {
     border: "none",
     boxShadow: 24,
     borderRadius: "5px",
-     
+
 };
 
 const names = [
@@ -68,13 +68,11 @@ function getStyles(name, accountName, theme) {
 
 
 export default function AddProject({ open, setOpen, onState, setOnState }) {
-    
-    const [file, setFile] = React.useState() 
+
+    const [file, setFile] = React.useState()
     const [accountName, setAccountName] = React.useState([]);
     const theme = useTheme();
-    const [rows, setSubUser] = React.useState([])
-    // firebase storage initialize
-   
+    const [rows, setSubUser] = React.useState([]) 
 
     const {
         register,
@@ -86,46 +84,45 @@ export default function AddProject({ open, setOpen, onState, setOnState }) {
     } = useForm();
 
     const localAuth = localStorage?.getItem("_user");
-    const _user  = JSON.parse(localAuth); 
+    const _user = JSON.parse(localAuth);
 
 
-    
-    React.useEffect(() => { 
-          axios.get(`http://localhost:5000/api/v1/user/sub_user/${_user?.email}`)
-          .then(res => { 
-            setSubUser(res.data.users)  
-          })
-      }, [onState])
- 
+
+    React.useEffect(() => {
+        axios.get(`http://localhost:5000/api/v1/user/sub_user/${_user?.email}`)
+            .then(res => {
+                setSubUser(res.data.users)
+            })
+    }, [onState])
+
 
 
     const onSubmit = (data) => {
         const formData = {
             project_name: data.project_name,
             bot_platform: data.bot_platform,
-            expected_sales: data.expected_sales, 
-            account_name: accountName,  
+            expected_sales: data.expected_sales,
+            account_name: accountName,
             user_email: _user.email,
             status: "panging",
             file_name: file?.name,
-        };
- 
- 
+        }; 
+
         axios
             .post("http://localhost:5000/api/v1/projects/new_project", { formData })
-            .then((res) => {  
+            .then((res) => {
                 const storageRef = ref(storage, `/project/${_user?.email}/${data?.project_name}/${file?.name}`)
-                const uploadTask = uploadBytesResumable(storageRef, file);  
-                if(uploadTask){
-                    setOnState(onState? false : true);   
+                const uploadTask = uploadBytesResumable(storageRef, file);
+                if (uploadTask) {
+                    setOnState(onState ? false : true);
                     alert("Successfully create project!");
                     setOpen(false);
                     reset();
-                }else{
+                } else {
                     alert("Error can't upload file, Please check you file!");
                 }
-                
-                 
+
+
             })
             .catch((error) => {
                 console.log(error);
@@ -196,14 +193,14 @@ export default function AddProject({ open, setOpen, onState, setOnState }) {
                                 <input className="project-add-input p-1" required type='file' name="file" onChange={(e) => handleOnChange(e.target.files[0])} />
 
 
-                                <label className="mt-2">Accounts</label> 
-                                <Select 
-                                    className="project-add-input_multiple" 
+                                <label className="mt-2">Accounts</label>
+                                <Select
+                                    className="project-add-input_multiple"
                                     multiple
                                     required
                                     value={accountName}
                                     onChange={handleChange}
-                                    input={<OutlinedInput id="select-multiple-chip" />} 
+                                    input={<OutlinedInput id="select-multiple-chip" />}
                                     renderValue={(selected) => (
                                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                             {selected.map((value) => (
@@ -222,15 +219,15 @@ export default function AddProject({ open, setOpen, onState, setOnState }) {
                                             {user?.email}
                                         </MenuItem>
                                     ))}
-                                </Select> 
-                                
+                                </Select>
+
 
                                 {errors.exampleRequired && <span>This field is required</span>}
 
-                                <Box className="add-button-box"> 
-                                <button className="mt-3 button-add" type="submit">  <img src={add_icon} alt="logo" className="coles-icon" /> Add Project</button>  
-                               
-                                <Button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</Button> 
+                                <Box className="add-button-box">
+                                    <button className="mt-3 button-add" type="submit">  <img src={add_icon} alt="logo" className="coles-icon" /> Add Project</button>
+
+                                    <Button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</Button>
                                 </Box>
                             </form>
                         </Box>

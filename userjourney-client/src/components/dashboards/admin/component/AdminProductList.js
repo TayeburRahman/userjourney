@@ -148,7 +148,7 @@ EnhancedTableHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
-}; 
+};
 
 
 export default function AdminProductList() {
@@ -164,20 +164,20 @@ export default function AdminProductList() {
 
   const localAuth = localStorage?.getItem("_user");
   const _user = JSON.parse(localAuth);
-  const {products: rows}   = useSelector((state) => state.auth);
+  const { products: rows } = useSelector((state) => state.auth);
   const dispatch = useDispatch()
- 
+
 
   useEffect(() => {
 
     axios.get(`http://localhost:5000/api/v1/product/get_product`)
       .then(res => {
         setProducts(res.data.product)
-        dispatch(productListGet(res.data.product))     
-      }) 
+        dispatch(productListGet(res.data.product))
+      })
   }, [onState])
 
- 
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {

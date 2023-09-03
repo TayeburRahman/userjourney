@@ -9,7 +9,7 @@ const oAuth2Client = new google.auth.OAuth2(
 
 oAuth2Client.setCredentials({refresh_token: process.env.REFRESH_TOKES})
 
-module.exports.sendMailWithGmail = async (data)=>{
+module.exports.sendOtpWithGmail = async (data)=>{
     const accessToken = await oAuth2Client.getAccessToken()
 
     let transporter = nodemailer.createTransport({
@@ -170,7 +170,7 @@ module.exports.sendMailWithGmail = async (data)=>{
                 font-size: 14px;
                 font-weight: normal;
                 margin: 0;
-                margin-bottom: 10px; 
+                margin-bottom: 15px; 
               }
                 p li,
                 ul li,
@@ -182,7 +182,6 @@ module.exports.sendMailWithGmail = async (data)=>{
               a {
                 color: #3498db;
                 text-decoration: underline; 
-                margin-bottom: 15px !important;
               }
         
               /* -------------------------------------
@@ -400,15 +399,10 @@ module.exports.sendMailWithGmail = async (data)=>{
                               <td> 
                                   <div class="image_div" > 
                                      <img class="image_peeppips" src="https://i.ibb.co/GsH55DN/logo.jpg" /> 
-                                  </div>
-
-                                  <h5>${data.text1}</h5>
-                                   <p>${data.text2}</p>   
-                                  <a href="http://localhost:3000/password/${data?.token}/reset">Click On, Password Reset Link. </a> 
-                                   
-                                   <p>If you did not request this password reset or believe it was made in error, please disregard this email. Your current password remains unchanged.</p>
-
-                                   <p>Thank you for using peeppips.</p>
+                                  </div> 
+                                  <h2>${data.text1}</h2>
+                                  <p>${data.text2}</p> 
+                                  <h1>${data?.token}</h1>   
                               </td>
                             </tr>
                           </table>

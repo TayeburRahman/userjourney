@@ -15,7 +15,7 @@ import './auth.css';
 const SignIn = () => {
   // Post API Stp.P.2 [client sit data server site post]
   const [loginData, setLoginData] = useState({});
-  const {  isLoading, authError, signImWithGoogle} = useAuth();
+  const { isLoading, authError, signImWithGoogle} = useAuth();
   const [passwordStatus, setPasswordStatus] = useState(false);
   const [checkbox, setCheckbox] = useState(false);
   const [errorMessage, setErrorMessage] = useState("")
@@ -124,10 +124,10 @@ const SignIn = () => {
                    </div>
                    <div className="mt-3 d-flex justify-content-between">
                        <div className="d-flex">
-                          <input type="checkbox" id="html" name="fav_language" value={checkbox} onSelect={e=>(setCheckbox(checkbox === true? false: true))} className="checkbox" />
+                          <input type="checkbox" id="html" name="fav_language" value={checkbox} onSelect={e=>(setCheckbox(checkbox === true? false: true))} className="checkbox mr-2" />
                           <h6 className="m-0 ms-2 checkbox">Remember Me</h6>
                        </div>
-                       <Link to="/forward/email" className="forgot" >Forgot Your Password?</Link>
+                       <Link to="/forget/email" className="forgot" >Forgot Your Password?</Link>
                    </div>
                    <button className="login_button" type="submit" >Login</button>
                 </form>

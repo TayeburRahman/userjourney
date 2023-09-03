@@ -58,8 +58,8 @@ export default function UpdateProducts({ openEdit, setOpenEdit, editData, onStat
         formState: { errors },
     } = useForm();
 
-    const [avatar, setFile] = useState()   
- 
+    const [avatar, setFile] = useState()
+
 
     useEffect(() => {
         reset()
@@ -69,28 +69,25 @@ export default function UpdateProducts({ openEdit, setOpenEdit, editData, onStat
     const onSubmit = (data) => {
         const formData = {
             product_name: data.product_name,
-            product_details: data.product_details  
+            product_details: data.product_details
         }; 
- 
- 
+
         axios
-            .put(`http://localhost:5000/api/v1/product/update_product/${editData?.id}`,{ avatar,formData }, {
+            .put(`http://localhost:5000/api/v1/product/update_product/${editData?.id}`, { avatar, formData }, {
                 headers: {
-                  "Content-Type": "multipart/form-data",
+                    "Content-Type": "multipart/form-data",
                 }
-              })
-             .then((res) => {  
-                    setOnState(onState? false : true);    
-                    alert("Successfully update product!");
-                    setOpenEdit(false)  
-                 
+            })
+            .then((res) => {
+                setOnState(onState ? false : true);
+                alert("Successfully update product!");
+                setOpenEdit(false)
+
             })
             .catch((error) => {
                 console.log(error);
             });
-    };
-
-
+    }; 
 
     const handleOnChange = (data) => {
         setFile(data)
@@ -119,26 +116,22 @@ export default function UpdateProducts({ openEdit, setOpenEdit, editData, onStat
                             Edit New Project
                         </Typography>
                         <Box>
-                        <form onSubmit={handleSubmit(onSubmit)} className="d-grid">
-                            <label className="mt-2">Product Name </label>
-                                <input className="project-add-input" defaultValue={editData?.name} placeholder="Product Name" {...register("product_name")} /> 
+                            <form onSubmit={handleSubmit(onSubmit)} className="d-grid">
+                                <label className="mt-2">Product Name </label>
+                                <input className="project-add-input" defaultValue={editData?.name} placeholder="Product Name" {...register("product_name")} />
 
                                 <label className="mt-2">Product Image ex: {editData?.image}  </label>
-                                <input className="project-add-input p-1" type='file' name="file" onChange={(e) => handleOnChange(e.target.files[0])} />  
+                                <input className="project-add-input p-1" type='file' name="file" onChange={(e) => handleOnChange(e.target.files[0])} />
 
                                 <label className="mt-2">Product Details </label>
-                                <textarea className="project-add-textarea" defaultValue={editData?.details}  placeholder="Wright product details" {...register("product_details")} /> 
-
-                                 
-
-                                
+                                <textarea className="project-add-textarea" defaultValue={editData?.details} placeholder="Wright product details" {...register("product_details")} /> 
 
                                 {errors.exampleRequired && <span>This field is required</span>}
 
-                                <Box className="add-button-box"> 
-                                <button className="mt-3 button-add" type="submit">  <img src={add_icon} alt="logo" className="coles-icon" /> Add Product</button>  
-                               
-                                <Button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</Button> 
+                                <Box className="add-button-box">
+                                    <button className="mt-3 button-add" type="submit">  <img src={add_icon} alt="logo" className="coles-icon" /> Add Product</button>
+
+                                    <Button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</Button>
                                 </Box>
                             </form>
                         </Box>

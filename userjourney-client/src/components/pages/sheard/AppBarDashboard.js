@@ -17,11 +17,11 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import * as React from "react";
 import { useDispatch } from 'react-redux';
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import noto_rocket from '../assets/noto_rocket.svg';
-import { userLoggedOut } from '../features/auth/authSlice';
-import useAdmin from '../hooks/useAdmin';
-import useAuth from '../hooks/useAuth';
-import useSubUsers from '../hooks/useSubUsers';
+import noto_rocket from '../../../assets/noto_rocket.svg';
+import { userLoggedOut } from '../../../features/auth/authSlice';
+import useAdmin from '../../../hooks/useAdmin';
+import useAuth from '../../../hooks/useAuth';
+import useSubUsers from '../../../hooks/useSubUsers';
 export default function AppBarDashboard({logoGreen}) {
   const { pathname } = useLocation();
   const isAuth = useAuth()

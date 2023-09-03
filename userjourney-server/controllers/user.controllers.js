@@ -1,5 +1,6 @@
 
-const { sendEmail } = require("../services/email.service");
+const { sendMailWithGmail } = require("../services/email.service");
+const { sendOtpWithGmail } = require("../services/otp.service");
 const { generateToken } = require("../utils/token");
 let bcrypt = require("bcryptjs");
 const admin = require("firebase-admin");
@@ -23,6 +24,16 @@ const createUser = async (req, res) => {
     }
     const randomOTP = Math.floor(Math.random() * 12345) + 11;
 
+    const mailData = {
+      to: req.body.email,
+      subject: 'Verify your account',
+      text1: 'Verify your email to sign up for peeppips',
+      text2:"Please use the OTP below to login to your account. It is only valid for 10 minutes.",
+      token: randomOTP
+    }
+
+    sendOtpWithGmail(mailData)
+
     const userJson = {
       email: req.body.email,
       name: req.body.name,
@@ -33,6 +44,11 @@ const createUser = async (req, res) => {
       register_type: "register manual",
     };
 
+    if(ExistingUser.active === false) {
+      let usersDB = db.collection('users')
+      await usersDB.doc(req.body.email).delete(); 
+    }
+
     const usersDb =  db.collection('users')
     await usersDb.doc(req.body.email).set(userJson) ;  
 
@@ -42,6 +58,40 @@ const createUser = async (req, res) => {
       data: others,
       status: "success",
       message: "User register success",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: "error", message: error });
+  }
+};
+
+const otpChecker = async (req, res) => {
+  try {
+    const {otp} = req.body;  
+    const {email} = req.params;  
+    let userRef = db.collection('users')  
+    const userData = await userRef.doc(email).get(); 
+    const existingUser = userData.data()  
+
+     const checkOtp = existingUser?.otp === otp? true : false
+
+     if(checkOtp === false) {
+      return res.status(404).json({ 
+         status: "nomatch",
+         message: "No match your OTP, Please check again !",
+       });
+     } 
+
+    const userJson = { 
+      otp:'verified', 
+      active: true,  
+    }; 
+ 
+    await userRef.doc(email).update(userJson) ;   
+
+    return res.status(200).json({ 
+      status: "success",
+      message: "OTP Match success",
     });
   } catch (error) {
     console.log(error);
@@ -414,24 +464,35 @@ const sendEmailForget = async (req, res) => {
     const {email} = req.body; 
     console.log("email", email)
 
-    const userRef = db.collection("users").doc(email);
-    const response = await userRef.get();
+    const userRef = db.collection("users") ;
+    const response = await userRef.doc(email).get();
     const user = response.data()   
+    const { token, password, ...others } = user 
 
     // console.log("user", user)
-    if(!user) { 
-      console.log("userNo", user)  
+    if(!user) {  
       return res.json({
          status: "error",
-         message: "Invalid email address"
+         message: "Invalid email address, Please type your account email !"
         
       });
     }  
-    //  sendEmail(email) 
 
+    const tokenGen = generateToken(user);   
+
+    const mailData = {
+      to: req.body.email,
+      subject: 'Password Reset Request',
+      text1: `Dear ${user?.name},`,
+      text2:"We received a request to reset the password for your account at peeppips. To proceed with resetting your password, please click on the following link:", 
+      token: tokenGen,
+    }
+
+    sendMailWithGmail(mailData)
+ 
      return res.status(200).send({
-      status: "success",
-      data: user, 
+      data: others,
+      status: "success", 
       message: "Check your email address",
     });
  
@@ -440,6 +501,29 @@ const sendEmailForget = async (req, res) => {
   }
 };   
 
+const changePassword = async (req, res) => {
+  try {
+    const {password} = req.body;  
+    const {email} = req.params;   
+
+    let userRef = db.collection('users')      
+
+    const userJson = { 
+      password: password,  
+    };  
+ 
+    await userRef.doc(email).update(userJson) ;   
+    console.log("password", userJson, email);
+
+    return res.status(200).json({ 
+      status: "success",
+      message: "Password change success",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: "error", message: error });
+  }
+};
  
 
 
@@ -461,131 +545,7 @@ const sendEmailForget = async (req, res) => {
 //           .status(500).json({massages: error.massages})
 //   }
 // };
-// const getLeaderboardUser = async (req, res) => {
-//   try {
-//     const users = await userModels
-//       .find(
-//         {},
-//         { displayName: 1, imageURL: 1, _id: 1, points: 1, scanned_products: 1 }
-//       )
-//       .sort({ points: -1 });
-//     res.json(users);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Server Error" });
-//   }
-// };
-
-// const addFriend = async (req, res) => {
-//   const { friendId, userId } = req.body;
-//   try {
-//     const result = await userModels.updateOne(
-//       {
-//         _id: userId,
-//       },
-//       {
-//         $push: {
-//           friends: friendId,
-//         },
-//       }
-//     );
-//     res.json({
-//       status: "success",
-//       message: "Friend added successfully",
-//       result,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Server Error" });
-//   }
-// };
-// const getUserFriends = async (req, res) => {
-//   const { userId } = req.body;
-//   try {
-//     const result = await userModels.findOne(
-//       {
-//         _id: userId,
-//       },
-//       {
-//         friends: 1,
-//       }
-//     );
-//     res.json(result?.friends);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Server Error" });
-//   }
-// };
-// // function removeFriend
-// const removeFriend = async (req, res) => {
-//   const { friendId, userId } = req.body;
-//   try {
-//     const result = await userModels.updateOne(
-//       {
-//         _id: userId,
-//       },
-//       {
-//         $pull: {
-//           friends: friendId,
-//         },
-//       }
-//     );
-//     res.json({
-//       status: "success",
-//       message: "Friend removed ",
-//       result,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Server Error" });
-//   }
-// };
-
-// const getUserData = async (req, res) => {
-//   try {
-//     const email = req.params;
-
-//     const user = await userModels.findOne(email);
-
-//     return res.status(201).send(user);
-//   } catch (error) {
-//     return res.json({ status: "error", message: error.massages });
-//   }
-// };
-
-// const getUserFriendData = async (req, res) => {
-//   try {
-//     const _id = req.params.ID;
-//     const friend = await userModels
-//       .findOne({ _id })
-//       .select(
-//         "displayName imageURL email _id points scanned_products like friends"
-//       );
-//     return res.status(201).send(friend);
-//   } catch (error) {
-//     return res.json({ status: "error", message: error.massages });
-//   }
-// };
-
-// const updateUserName = async (req, res) => {
-//   try {
-//     const _id = req.params.ID;
-//     const { displayName } = req.body.formData;
-
-//     console.log("_id", _id);
-
-//     const update = await userModels.updateOne(
-//       { _id },
-//       { $set: { displayName } }
-//     );
-
-//     console.log("update", update);
-
-//     return res.status(201).send(update);
-//   } catch (error) {
-//     return res.json({ status: "error", message: error.massages });
-//   }
-// };
+ 
 
 const updateProfileImage = async (req, res) => {
   try {
@@ -621,18 +581,9 @@ module.exports = {
   updateSubUser,
   deleteMyUser,
   getSubUser,
-  getSubUserDetails,
-
-
-  // getLeaderboardUser,
-  // addFriend,
-  // getUserFriends,
-  // removeFriend,
-  // getUserData,
-  // getUserFriendData,
-  // updateUserName,
-  updateProfileImage,
-   
-  
+  getSubUserDetails, 
+  otpChecker,
+  updateProfileImage, 
+  changePassword,
  
 };

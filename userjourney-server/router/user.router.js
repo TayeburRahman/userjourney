@@ -13,6 +13,8 @@ const {
   getAllUser,
   getSubUser,
   getSubUserDetails,
+  otpChecker,
+  changePassword,
 } = require("../controllers/user.controllers");
 const upload = require("../middleware/uploadImage"); 
 
@@ -22,8 +24,10 @@ router.route("/signup").post(createUser);
 router.route("/auth").post(googleAuthUser);
 router.route("/login").post(getUser);
 router.route("/get/all").get(getAllUser); 
- 
-router.route("/forward/email").post(sendEmailForget);
+router.route("/email/otp/:email").put(otpChecker);  
+router.route("/password/change/:email").put(changePassword);   
+
+router.route("/forget/email").post(sendEmailForget);
 router.route("/update/profile").put(updateUserInfo);
 router.route("/update/password/:email").put(changeUserPassword);
 router.route("/create/sub_user").post(createSubUser);

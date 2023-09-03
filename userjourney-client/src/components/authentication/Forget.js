@@ -7,7 +7,9 @@ import './auth.css';
 
 const EmailForget = () => {
 
-  const title = ["Forgot Password"]
+  const title = ["Forget Password"]
+
+
  
 
   return (

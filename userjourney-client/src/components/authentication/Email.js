@@ -1,7 +1,7 @@
 import { Alert } from '@mui/material';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
-import { useForwardEmailMutation } from '../../features/auth/authApi';
+import { useForgetEmailMutation } from '../../features/auth/authApi';
 import './auth.css';
 
 function Email({ title }) {
@@ -14,10 +14,10 @@ function Email({ title }) {
 
   // Email return to the Private Page 
 
-  const [forwardEmail, { data: resData, error: responseError }] = useForwardEmailMutation();
+  const [forgetEmail, { data: resData, error: responseError }] = useForgetEmailMutation();
 
-
-  console.log('resData?.status', resData?.message )
+  console.log('resData?.status', resData)
+  
   useEffect(() => {
     if (resData?.status === "error") {
       setMessage('')
@@ -30,7 +30,8 @@ function Email({ title }) {
       const newEmailData = {};
       newEmailData[field] = '';
       setEmailData(newEmailData); 
-      setMessage('Send a link, Check your email') 
+      setMessage('Send a link, Please Check your email address') 
+       
       return;
     }
     setErrorMessage('')
@@ -44,27 +45,27 @@ function Email({ title }) {
     const value = e.target.value;
     const newEmailData = { ...emailData };
     newEmailData[field] = value;
-    setEmailData(newEmailData);
-    // console.log(newEmailData);
+    setEmailData(newEmailData); 
+    console.log(emailData);
   };
 
   const handelSubmit = async (e) => {
     e.preventDefault();
-    await forwardEmail(emailData);
+    await forgetEmail(emailData);
 
   }; 
 
   return (
     <Fragment>
       <div className="login-filed">
-        <h5 className="mt-5 login_account">{title}</h5>
+        <h5 className="mt-5 mb-4 login_account">{title}</h5>
                 {
-                  errorMessage && <Alert severity="error"  >{errorMessage }</Alert>
+                  errorMessage && <Alert severity="error" className='m-3'  >{errorMessage }</Alert>
                 } 
                 {
-                  isMessage && <Alert severity="success">{isMessage}</Alert>
+                  isMessage && <Alert severity="success" className='m-3'>{isMessage}</Alert>
                 }
-        <form className="mt-5" onSubmit={handelSubmit}>
+        <form className="mt-2" onSubmit={handelSubmit}>
           <input className="effect-12" type="email" name="email" placeholder="Email" value={emailData.email} required onChange={handleOnChange} />
           <button className="login_button mt-4" type="submit" >Request Reset Password</button>
         </form>

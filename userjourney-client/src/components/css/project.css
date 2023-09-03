@@ -362,6 +362,17 @@
   border: none;
   color: white;
 }
+/* ----------------------------- */
+.broker_button {
+  border: navajowhite;
+  /* height: 23px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 5px;
+  margin-left: 10px;
+}
 /* --------------------------- */
 @media only screen and (max-width: 930px) {
   .sub_sort_details {

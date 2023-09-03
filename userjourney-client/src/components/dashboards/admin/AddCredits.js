@@ -59,9 +59,7 @@ function getStyles(name, accountName, theme) {
 
 export default function AddCredits({ openEdit, setOpenEdit, editData, onState, setOnState }) {
     const [valuePay, setValuePay] = useState('manual')
-    const {
-        register,
-        handleSubmit,
+    const { 
         reset,
         formState: { errors },
     } = useForm();
@@ -73,56 +71,52 @@ export default function AddCredits({ openEdit, setOpenEdit, editData, onState, s
     const [rateProject, setProjectRate] = useState(10)
     const [rateParson, setParsonRate] = useState(5)
     const [totalAmount, setTotalAmount] = useState()
-    const [totalParson, setTotalParson] = useState()
-
-     
-
-
+    const [totalParson, setTotalParson] = useState() 
 
     const theme = useTheme();
     const [userName, setUserName] = useState('');
     const localAuth = localStorage?.getItem("_user");
-    const _user = JSON.parse(localAuth); 
-    
+    const _user = JSON.parse(localAuth);
 
-    useEffect(() => { 
+
+    useEffect(() => {
         axios.get(`http://localhost:5000/api/v1/user/get/all`)
             .then(res => {
-                setSubUser(res.data) 
+                setSubUser(res.data)
             })
 
     }, [editData])
 
-    useEffect(() => {  
-        if(editData?.account_name){
+    useEffect(() => {
+        if (editData?.account_name) {
             setAccountName(editData?.account_name)
-        } 
+        }
     }, [openEdit])
 
 
 
-    useEffect(() => {  
-     let parsonAmount = accountName?.length * rateParson;  
-     setTotalParson(Number(parsonAmount))
-     setTotalAmount( Number(parsonAmount) + Number(rateProject))
-    }, [ rateParson, accountName, rateProject])
- 
-  
+    useEffect(() => {
+        let parsonAmount = accountName?.length * rateParson;
+        setTotalParson(Number(parsonAmount))
+        setTotalAmount(Number(parsonAmount) + Number(rateProject))
+    }, [rateParson, accountName, rateProject])
 
-    const handleAdd= async () => {  
-        
+
+
+    const handleAdd = async () => {
+
         const formData = {
             project_id: editData.id,
-            project_name: editData.project_name,  
-            project: editData,  
+            project_name: editData.project_name,
+            project: editData,
             account_name: accountName,
             amount: totalAmount,
-            user_email: editData.user_email, 
+            user_email: editData.user_email,
         };
 
         axios
             .post(`http://localhost:5000/api/v1/projects/add/credits`, { formData })
-            .then((res) => { 
+            .then((res) => {
                 setOnState(onState ? false : true);
                 alert("Successfully update project!");
                 setOpenEdit(false);
@@ -131,10 +125,7 @@ export default function AddCredits({ openEdit, setOpenEdit, editData, onState, s
             .catch((error) => {
                 console.log(error);
             });
-      } 
-
-
-
+    } 
 
 
     const handleChange = (event) => {
@@ -148,7 +139,7 @@ export default function AddCredits({ openEdit, setOpenEdit, editData, onState, s
     };
 
 
-     
+
 
     const handleClose = () => setOpenEdit(false);
 
@@ -187,13 +178,13 @@ export default function AddCredits({ openEdit, setOpenEdit, editData, onState, s
                                         <label className="mt-3 color-gre" >Rate per project</label>
                                         <div className='d-flex'>
                                             <AttachMoneyIcon />
-                                            <input className="form-control" type="number" required placeholder="Rate per project" value={rateProject} onChange={e=> setProjectRate(e.target.value)}/>
+                                            <input className="form-control" type="number" required placeholder="Rate per project" value={rateProject} onChange={e => setProjectRate(e.target.value)} />
                                         </div>
 
                                         <label className="mt-3 color-gre" >Rate per person</label>
                                         <div className='d-flex'>
                                             <ManIcon />
-                                            <input className="form-control" type="number" required placeholder="Rate per person" value={rateParson} onChange={e=> setParsonRate(e.target.value)} />
+                                            <input className="form-control" type="number" required placeholder="Rate per person" value={rateParson} onChange={e => setParsonRate(e.target.value)} />
                                         </div>
 
 
@@ -201,8 +192,8 @@ export default function AddCredits({ openEdit, setOpenEdit, editData, onState, s
                                         <label className="mt-2">Accounts</label>
                                         <Select
                                             className=" "
-                                            multiple 
-                                            value={ accountName  }
+                                            multiple
+                                            value={accountName}
                                             onChange={handleChange}
                                             input={<OutlinedInput id="select-multiple-chip" />}
                                             renderValue={(selected) => (
@@ -252,7 +243,7 @@ export default function AddCredits({ openEdit, setOpenEdit, editData, onState, s
                                             <div className='hight_50 ps-2' id={`${valuePay === "paypal" && "display_block"}`}>
                                                 <div>
                                                     <label className="mt-2 color-gre">Proof of payment :</label>
-                                                    <textarea className="form-control" type="text" placeholder="Type how the payment was taken"  />
+                                                    <textarea className="form-control" type="text" placeholder="Type how the payment was taken" />
                                                 </div>
                                             </div>
 
@@ -261,36 +252,24 @@ export default function AddCredits({ openEdit, setOpenEdit, editData, onState, s
                                         <div className="payment_box mt-3 p-2">
                                             <h6 className="mt-2 pb-2">Credits Summary</h6>
                                             <div className="d-flex space_between">
-                                            <p className="m-0">Project Rate</p> <p className="m-0"> ${rateProject}</p>
+                                                <p className="m-0">Project Rate</p> <p className="m-0"> ${rateProject}</p>
                                             </div>
                                             <div className="d-flex space_between">
                                                 <p className=" ">Person Rate ({accountName?.length} ac) </p> <p className=" "> {accountName?.length} * ${rateParson}</p>
                                             </div>
                                             <div className="d-flex space_between mb-2">
                                                 <p className="m-0 ">Total Amount </p> <p className="m-0"> {totalParson} + {rateProject} = ${totalAmount}</p>
-                                            </div>
-
-                                            <div>
-
-                                            </div>
-
-                                            <div>
-
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-
+                                            </div> 
+                                        </div> 
+                                    </div> 
                                 </div>
                             </div>
 
                             <Box className="add-button-box">
-                                    <button className="mt-3 button-add" onClick={handleAdd} >  <img src={add_icon} alt="logo" className="coles-icon" /> Update </button>
+                                <button className="mt-3 button-add" onClick={handleAdd} >  <img src={add_icon} alt="logo" className="coles-icon" /> Update </button>
 
-                                    <Button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</Button>
-                                </Box> 
+                                <Button className="button_close mt-3 ml-2" onClick={handleClose}>   <img src={close_icon} alt="logo" className="coles-icon" />  Close</Button>
+                            </Box>
                         </Box>
                     </Box>
                 </Fade>

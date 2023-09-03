@@ -21,7 +21,7 @@ const style = {
     boxShadow: 24,
     borderRadius: "5px",
 
-}; 
+};
 
 export default function AddProduct({ open, setOpen, onState, setOnState }) {
 
@@ -39,11 +39,8 @@ export default function AddProduct({ open, setOpen, onState, setOnState }) {
         const formData = {
             product_name: data.product_name,
             product_details: data.product_details
-        };
-
-        console.log(formData);
-
-
+        }; 
+        
         axios
             .post("http://localhost:5000/api/v1/product/new_product", { avatar, formData }, {
                 headers: {
@@ -54,10 +51,7 @@ export default function AddProduct({ open, setOpen, onState, setOnState }) {
                 setOnState(onState ? false : true);
                 alert("Successfully create product!");
                 setOpen(false);
-                reset();
-
-
-
+                reset(); 
             })
             .catch((error) => {
                 console.log(error);
@@ -99,12 +93,8 @@ export default function AddProduct({ open, setOpen, onState, setOnState }) {
                                 <input className="project-add-input p-1" required type='file' name="file" onChange={(e) => handleOnChange(e.target.files[0])} />
 
                                 <label className="mt-2">Product Details </label>
-                                <textarea className="project-add-textarea" required placeholder="Wright product details" {...register("product_details")} />
-
-
-
-
-
+                                <textarea className="project-add-textarea" required placeholder="Wright product details" {...register("product_details")} /> 
+                                
                                 {errors.exampleRequired && <span>This field is required</span>}
 
                                 <Box className="add-button-box">

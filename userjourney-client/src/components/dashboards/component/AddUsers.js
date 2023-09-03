@@ -61,6 +61,7 @@ export default function AddUsers({ open, setOpen, onState, setOnState }) {
     const [phoneNum, setPhoneNum] = useState('254 ');
     const [projectName, setProjectName] =  useState([]);
     const [projects, setAllProject] = useState([])
+    const [brokers, setBrokers]= useState()
  
 
     const theme = useTheme();
@@ -85,6 +86,11 @@ export default function AddUsers({ open, setOpen, onState, setOnState }) {
           .then(res => { 
             setAllProject(res.data?.project)  
           })
+
+          axios.get(`http://localhost:5000/api/v1/product/get_broker`)
+          .then(res => { 
+            setBrokers(res.data?.brokers)   
+          }) 
  
       }, [onState])
  
@@ -181,7 +187,19 @@ export default function AddUsers({ open, setOpen, onState, setOnState }) {
                                 <input className="project-add-input" required placeholder="User password" {...register("password")} /> 
 
                                 <label className="label_input_text" style={{ marginBottom: "0"}}>Broker Name</label>
-                                <input className="project-add-input" required placeholder="Enter broker name" {...register("broker")} /> 
+                                <select className="project-add-input" required placeholder="Select broker name" {...register("broker")} >
+                                    {
+                                        brokers?.map(broker => (
+                                            <option value={broker?.name}> {broker?.name}</option>
+                                        ))
+                                    }
+                                   
+                                    
+                                </select>
+                             
+                             
+                             
+                                {/* <input className="project-add-input" required placeholder="Enter broker name" {...register("broker")} />  */}
 
                                 <label className="label_input_text" style={{ marginBottom: "0"}}>Trading account login number </label>
                                 <input className="project-add-input" required placeholder="Enter trading account number" {...register("trading_account_number")} />

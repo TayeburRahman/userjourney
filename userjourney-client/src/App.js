@@ -37,8 +37,8 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/singup" element={<SignUp />} />
-          <Route path="/forward/email" element={<EmailForget />} />
-          <Route path="/password/reset" element={<ResetPassword />} />
+          <Route path="/forget/email" element={<EmailForget />} />
+          <Route path="/password/:token/reset" element={<ResetPassword />} />
           <Route path="/verify/otp" element={<VerifySingIn />} />
           <Route path="/active/otp" element={<ActiveAccount />} />
 

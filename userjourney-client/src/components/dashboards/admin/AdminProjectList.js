@@ -25,6 +25,7 @@ import edit_svg from '../../../assets/ep_edit.svg';
 import { projectListGet } from '../../../features/auth/authSlice';
 import DeleteProject from '../component/DeleteProject';
 import AddCredits from './AddCredits';
+import AddBroker from './component/AddBroker';
 
  
 
@@ -168,6 +169,8 @@ EnhancedTableHead.propTypes = {
 
 
 export default function AdminProjectList() {
+  const [openBroker, setOpenBroker] = useState(false); 
+  const [brokers, setBrokers]= useState()
   const [page, setPage] = useState(0); 
   const [onState, setOnState] = useState(false) 
   const [openEdit, setOpenEdit] = useState(false); 
@@ -188,6 +191,11 @@ export default function AdminProjectList() {
           setAllProject(res.data?.project)  
           dispatch(projectListGet(res.data.project))  
         })
+
+        axios.get(`http://localhost:5000/api/v1/product/get_broker`)
+        .then(res => { 
+          setBrokers(res.data?.brokers)   
+        }) 
     }, [onState])
 
   // page select top 
@@ -211,6 +219,10 @@ export default function AdminProjectList() {
     setOpenRemove(true);
     setRemoveData(data)
   }
+
+  const handleOpen = () => {
+    setOpenBroker(true);
+  } 
 
  
   // ----------------- 
@@ -243,9 +255,9 @@ export default function AdminProjectList() {
       <Box className='p-3 box_peeper' sx={{ width: '100%', mb: 2 }}> 
            <Box className="dp_sh_flex_box">
             <Typography className='add_project_text'>All Projects</Typography>
- 
+            <button onClick={handleOpen} className='add_project_button'> Manage Brokers</button>   
            </Box> 
-           {/* <AddCredits open={mOpen} setOpen={setMOpen} onState={onState} setOnState={setOnState}/> */}
+           <AddBroker openBroker={openBroker} setOpenBroker={setOpenBroker} brokers={brokers} onState={onState} setOnState={setOnState}/>
            <Box className="dp_sh_flex_box p-1 mb-3">
            <Box className="df_ai">
            <Typography className='entries'>Show</Typography>

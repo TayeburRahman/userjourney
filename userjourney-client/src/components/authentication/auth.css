@@ -7,6 +7,9 @@
   text-align: left;
   margin-top: 10px;
 }
+.account-pages {
+  background: #fffee685;
+}
 
 .span-ywll {
   color: #f1c93b;
@@ -54,6 +57,7 @@
   border-radius: 10px;
   padding-bottom: 25px;
   padding-top: 5px;
+  background: white;
 }
 
 .d-grid-c-c {
