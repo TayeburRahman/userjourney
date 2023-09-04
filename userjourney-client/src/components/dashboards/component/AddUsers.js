@@ -62,13 +62,7 @@ export default function AddUsers({ open, setOpen, onState, setOnState }) {
     const [projectName, setProjectName] =  useState([]);
     const [projects, setAllProject] = useState([])
     const [brokers, setBrokers]= useState()
- 
-
-    const theme = useTheme();
- 
-
- 
-
+    const theme = useTheme(); 
     const {
         register,
         handleSubmit, 
@@ -92,13 +86,9 @@ export default function AddUsers({ open, setOpen, onState, setOnState }) {
             setBrokers(res.data?.brokers)   
           }) 
  
-      }, [onState])
- 
- 
+      }, [onState]) 
 
-     
-
-
+      
     const onSubmit = (data) => { 
     
         const formData = {

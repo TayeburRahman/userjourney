@@ -1,6 +1,6 @@
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { Grid } from "@mui/material";
+import { Alert, Grid } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -27,7 +27,7 @@ const SignIn = () => {
   const dispatch = useDispatch()
   const [loginUser, { data: resData, error: responseError }] = useLoginUserMutation();
 
-  // console.log("loginUser", resData)
+  console.log("loginUser", errorMessage)
 
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const SignIn = () => {
       //   localStorage.setItem('_user', resData?.data)
       // }
       
-      const destination = location?.state?.from || "/";
+      const destination = location?.state?.from || "/dashboard";
       navigate(destination)
     }
     setErrorMessage('')
@@ -98,11 +98,14 @@ const SignIn = () => {
             </Grid>  
             <Grid item className="login-right d-grid-c-c" xs={12} md={6} lg={6}>
               <div className="login-filed pb-4">
-                <h5 className="mt-5 login_account">Login To Your Account</h5>
+                <h5 className="mt-5 login_account mb-4">Login To Your Account</h5>
           
+                {
+                  errorMessage && <Alert severity="error">{errorMessage}</Alert>
+                }
 
                 <form onSubmit={handelLogin}>
-                  <input className="effect-12 mt-5" type="email"  onChange={handleOnChange} name="email" placeholder="Email" />
+                  <input className="effect-12 mt-2" type="email"  onChange={handleOnChange} name="email" placeholder="Email" />
                   <div className="input-group">
                         <input
                           type={passwordStatus ? "text" : "password"}

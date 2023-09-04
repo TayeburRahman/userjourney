@@ -39,8 +39,7 @@ export default function UpdateProfile({ openEdit, setOpenEdit, editData, onState
     const [userName, setUserName] = useState(''); 
 
     const [updateProfileInfo , { data: resData, error: responseError }] = useUpdateProfileInfoMutation();
-    const localAuth = localStorage?.getItem("_user");
-    const _token = localStorage?.getItem("_token");
+    const localAuth = localStorage?.getItem("_user"); 
     const _user = JSON.parse(localAuth);
     const dispatch = useDispatch()
 

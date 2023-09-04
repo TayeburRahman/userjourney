@@ -12,6 +12,7 @@ import { useRegistrationMutation } from "../../features/auth/authApi";
 import { createUsersData } from "../../features/auth/authSlice";
 import './auth.css';
 
+
 const SingUp = () => {
   const location = useLocation();
   const [passwordStatus, setPasswordStatus] = useState(false);
@@ -21,9 +22,52 @@ const SingUp = () => {
   const { signImWithGoogle } = useAuth();
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [newPass, setNewPass] = useState('');
+  const [confirmPass, setConfirmPass] = useState('');
+  const [error, setError] = useState('')
+
+  const [message, setMessage] = useState("");
+  const [progress, setProgress] = useState("");
 
   const [registration, { data: resData, error: responseError }] = useRegistrationMutation();
 
+
+  useEffect(() => {
+    setNewPass(loginData?.password)
+    if (newPass === confirmPass) {
+      setError(false)
+    }
+
+    const strengthChecks = {
+      length: 0,
+      hasUpperCase: false,
+      hasLowerCase: false,
+      hasDigit: false,
+      hasSpecialChar: false,
+    };
+
+    strengthChecks.length = newPass?.length >= 8 ? true : false;
+    strengthChecks.hasUpperCase = /[A-Z]+/.test(newPass);
+    strengthChecks.hasLowerCase = /[a-z]+/.test(newPass);
+    strengthChecks.hasDigit = /[0-9]+/.test(newPass);
+    strengthChecks.hasSpecialChar = /[^A-Za-z0-9]+/.test(newPass);
+
+    let verifiedList = Object.values(strengthChecks).filter((value) => value);
+
+    let strength =
+      verifiedList.length == 5
+        ? "Strong"
+        : verifiedList.length >= 2
+          ? "Medium"
+          : "Weak";
+
+    setProgress(`${(verifiedList.length / 5) * 100}%`);
+    setMessage(strength);
+
+    console.log("verifiedList: ", `${(verifiedList.length / 5) * 100}%`);
+
+
+  }, [loginData])
 
 
   useEffect(() => {
@@ -49,7 +93,7 @@ const SingUp = () => {
     setPasswordSecStatus(passwordSecStatus === false ? true : false);
     e.preventDefault();
   };
- 
+
   //   Register Input value
   const handleonChange = (e) => {
     const field = e.target.name;
@@ -60,7 +104,7 @@ const SingUp = () => {
     e.preventDefault();
 
   };
- 
+
 
   //   Register Button
   const handelRegister = async (e) => {
@@ -89,13 +133,17 @@ const SingUp = () => {
     }
 
     let userData = { ...useData };
-    await registration(userData) 
+    await registration(userData)
   };
 
   const handelGoogleSignIn = (e) => {
     signImWithGoogle(location, navigate)
   };
-
+  const getActiveColor = (type) => {
+    if (type === "Strong") return "#8BC926";
+    if (type === "Medium") return "#FEBD01";
+    return "red";
+  };
 
   return (
     <Fragment>
@@ -116,8 +164,6 @@ const SingUp = () => {
                 {
                   errorMessage && <Alert severity="error">{errorMessage}</Alert>
                 }
-
-
                 <form onSubmit={handelRegister} >
                   <div className="input-group-name">
                     <input className="effect-13 mt-4" onChange={handleonChange} required type="text" name="fst_name" placeholder="Fast Name" />
@@ -166,6 +212,26 @@ const SingUp = () => {
                       </span>
                     </button>
                   </div>
+
+                  <div className="progress-bg">
+                    <div
+                      className="progress"
+                      style={{
+                        width: progress,
+                        backgroundColor: getActiveColor(message),
+                        marginTop: "5px",
+                        height: "4px ",
+                      }}
+                    ></div>
+                  </div>
+
+                  {newPass.length !== 0 ? (
+                    <p className="message" style={{ color: getActiveColor(message), marginBottom: "0px" }}>
+                      Your password is {message}
+                    </p>
+                  ) : null}
+
+
                   <button type="submit" className="login_button" >Register</button>
                 </form>
                 <div className=" ">

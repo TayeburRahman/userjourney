@@ -186,6 +186,10 @@
   font-family: cursive !important;
   color: white !important;
 }
+.small_normal_yellow {
+  font-family: cursive !important;
+  color: #fbd85d !important;
+}
 
 .position_relative_bottom {
   position: relative;

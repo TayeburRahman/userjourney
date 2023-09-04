@@ -19,6 +19,7 @@ function NavBar() {
   return (
     <Box className="navbar" sx={{ width: "100%" }}  justifyContent={"center"} >
        <Box className="navbar-box d-flex" sx={{ width: "98%", justifyContent: "space-between"}} >
+        <Typography></Typography>
         {
           noneDisplay &&  <AppBarDashboard />
         }

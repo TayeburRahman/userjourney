@@ -65,6 +65,22 @@
   justify-items: center;
   align-items: center;
 }
+.effect-15 {
+  border: 0;
+  padding: 7px 15px;
+  border: 1px solid #c5c5c5;
+  background: transparent;
+  width: 396px;
+  height: 150px;
+  border-radius: 7px;
+}
+
+.effect-14 {
+  border: 0;
+  background: transparent;
+  width: 396px;
+  border-radius: 7px;
+}
 
 .effect-12 {
   border: 0;
@@ -126,7 +142,12 @@
   width: 396px;
   /* hh */
 }
-
+.input-group-name_cu {
+  display: flex !important;
+  justify-content: space-around;
+  width: 396px;
+  /* hh */
+}
 .login_account {
   font-family: George Rounded;
   font-size: 24px;
@@ -246,6 +267,9 @@
 .label_input_text {
   padding-top: 5px;
 }
+.contact-right {
+  background: #1a5d1a;
+}
 /* ----------------------- */
 @media only screen and (max-width: 600px) {
   .image_login {
@@ -257,6 +281,12 @@
   }
 
   .effect-12 {
+    width: 300px;
+  }
+  .effect-14 {
+    width: 300px;
+  }
+  .effect-15 {
     width: 300px;
   }
   .effect-11 {
@@ -279,6 +309,11 @@
   }
 
   .input-group-name {
+    display: grid !important;
+    width: 300px;
+    /* hh */
+  }
+  .input-group-name_cu {
     display: grid !important;
     width: 300px;
     /* hh */

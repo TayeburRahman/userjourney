@@ -143,7 +143,7 @@ function Home() {
 
                         </div>
                         <div className='text-center padding_bottom_50 padding_top_50'>
-                            <button className='home_button pl-5 pr-5'>Get Started</button>
+                             <Link to="/login"><button className='home_button pl-5 pr-5'>Get Started</button></Link>
                         </div>
                     </Container>
                 </div>

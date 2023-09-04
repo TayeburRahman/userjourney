@@ -44,7 +44,7 @@ const createUser = async (req, res) => {
       register_type: "register manual",
     };
 
-    if(ExistingUser.active === false) {
+    if(ExistingUser?.active === false) {
       let usersDB = db.collection('users')
       await usersDB.doc(req.body.email).delete(); 
     }
@@ -161,7 +161,7 @@ const getUser = async (req, res) => {
     if (! email || ! password) {
       return res.json({
         status: "error",
-        message: "Email and password are required",
+        message: "Email and password are required !",
       });
     }
 
@@ -172,7 +172,7 @@ const getUser = async (req, res) => {
     if (!user) {
       return res.json({
         status: "error",
-        message: "User not found",
+        message: "User not found, Please check your email !",
       });
     }
 
@@ -182,14 +182,14 @@ const getUser = async (req, res) => {
     if (!isMatchPassword) {
       return res.json({
         status: "error",
-        message: "Password Is Wrong",
+        message: "Password Is Wrong, Please check your Password !",
       });
     }
 
     if (!user.active) {
       return res.json({ 
         status: "error",
-        message: "Email Is Invalided",
+        message: "Email Is Invalided, Please check your email !",
       });
     }
 
@@ -504,9 +504,7 @@ const sendEmailForget = async (req, res) => {
 const changePassword = async (req, res) => {
   try {
     const {password} = req.body;  
-    const {email} = req.params;   
-
-    let userRef = db.collection('users')      
+    const {email} = req.params;     
 
     const userJson = { 
       password: password,  
@@ -523,28 +521,47 @@ const changePassword = async (req, res) => {
     console.log(error);
     return res.status(500).json({ status: "error", message: error });
   }
-};
+}; 
+
+
+const createContact = async (req, res ) => {   
+  try { 
+
+    const {data} = req.body 
+     
+ 
+ 
+    const contactDB = db.collection("contacts") 
+    await contactDB.add(data)    
+    console.log(data)
+
+   return res.status(201).json({  
+    status: "success",
+    message:'Brokers add successfully'});
+ } catch (error) {
+   return res.status(500).json({status: "error", message: error})
+ }
+}
+
+const getAllContact = async (req, res ) => {   
+  try { 
+    
+    const contactDB = db.collection("contacts") 
+    const snapshot = await contactDB.get()  
+    const list = snapshot?.docs.map((doc) => ({id: doc.id, ...doc.data()}))  
+
+    console.log('data',list)
+   return res.status(201).json({ 
+    contact: list,
+    status: "success",
+    message:'Brokers get successfully'});
+ } catch (error) {
+   return res.status(500).json({status: "error", message: error})
+ }
+}
  
 
-
-
-
  
-
- 
-
-//   try {
-//        await userModel.updateOne({
-//          email: req.params.email
-//         },
-//           req.body
-//       );
-//       res.status(201).json({massages:'Card Updated Successfully'});
-//   } catch (error) {
-//       return res
-//           .status(500).json({massages: error.massages})
-//   }
-// };
  
 
 const updateProfileImage = async (req, res) => {
@@ -585,5 +602,7 @@ module.exports = {
   otpChecker,
   updateProfileImage, 
   changePassword,
+  createContact,
+  getAllContact,
  
 };

@@ -59,7 +59,7 @@ export default function AppBarDashboard({logoGreen}) {
       to: "/dashboard/products",
     },
     {
-      name: "Accounts",
+      name: "Profile",
       icon: <AccountCircleIcon   />,
       to: "/dashboard/profile",
     }, 
@@ -138,12 +138,12 @@ export default function AppBarDashboard({logoGreen}) {
           </IconButton> 
         </Box> 
      <Box>
-     <List component="nav">
+     <List component="nav" className='list_item'>
 
       {listItem?.map(({ name, icon, to }) => (
-          <Link className="router_link " to={to} key={to} >
+          <Link className="router_link  link_nav_dower " to={to} key={to} >
             <ListItemButton
-              className="routing_button mb-1"
+              className="mb-3"
               id={`${pathname === to ? "background": "background_white"}`}
             >
               <ListItemIcon id={`${pathname === to ? "background": "background_white"}`}>{icon}</ListItemIcon>
@@ -156,9 +156,9 @@ export default function AppBarDashboard({logoGreen}) {
         ))} 
 
          {!isSubUser && privateList?.map(({ name, icon, to }) => (
-          <Link className="router_link " to={to} key={to} >
+          <Link className="router_link  link_nav_dower " to={to} key={to} >
             <ListItemButton
-              className="routing_button mb-1"
+              className="mb-3"
               id={`${pathname === to ? "background": "background_white"}`}
             >
               <ListItemIcon id={`${pathname === to ? "background": "background_white"}`}>{icon}</ListItemIcon>
@@ -174,9 +174,9 @@ export default function AppBarDashboard({logoGreen}) {
 
       {
        isAdmin &&  adminItem?.map(({name, icon, to})=>(
-            <Link className="router_link " to={to} key={to} >
+            <Link className="router_link  link_nav_dower " to={to} key={to} >
             <ListItemButton
-              className="routing_button mb-1"
+              className="mb-3"
               id={`${pathname === to ? "background": "background_white"}`}
             >
               <ListItemIcon id={`${pathname === to ? "background": "background_white"}`}>{icon}</ListItemIcon>
@@ -192,7 +192,7 @@ export default function AppBarDashboard({logoGreen}) {
     
        
 
-        <ListItemButton className="routing_button mb-1" onClick={logout}>
+        <ListItemButton className=" ms-5 link_nav_dower " onClick={logout}>
           <ListItemIcon id="background_white">
             <LogoutIcon />{" "}
           </ListItemIcon>

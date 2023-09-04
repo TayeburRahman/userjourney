@@ -236,6 +236,7 @@ export default function AdminProductList() {
 
           <button onClick={handleOpen} className='add_project_button'> Add Product</button>
         </Box>
+        
         <Box className="dp_sh_flex_box p-1 mb-3">
           <Box className="df_ai">
             <Typography className='entries'>Show</Typography>

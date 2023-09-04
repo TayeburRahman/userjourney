@@ -84,7 +84,7 @@ function About() {
 
                         <p className='p_product_text padding_bottom_50 mt-5 text-left'>With a commitment to excellence, we strive to empower clients in achieving their financial goals through automated trading.</p>
 
-                        <Link to="/" className='link_get_start'><button className='button_get_start mb-5'>Get Started</button></Link> 
+                        <Link to="/login" className='link_get_start'><button className='button_get_start mb-5'>Get Started</button></Link> 
                         </Container>
                     </div>
         </div>

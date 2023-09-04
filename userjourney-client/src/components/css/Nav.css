@@ -192,6 +192,13 @@
 #colorBlack {
   color: rgba(0, 0, 0, 0.863) !important;
 }
+/* ---------------- */
+.link_nav_logo:hover {
+  text-decoration: none !important;
+}
+.link_nav_logo {
+  text-decoration: none !important;
+}
 @media only screen and (max-width: 920px) {
   .pee_pips_dashboard {
     display: none;

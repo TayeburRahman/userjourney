@@ -327,8 +327,89 @@
   width: 95%;
   height: 95%;
 }
+/* ----------------------- */
+.credit_account {
+  border-radius: 10px;
+  background: #fff9e2;
+  padding: 7px;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+}
 
-/* --------------------------------------- */
+.credit_account_text {
+  font-family: cursive !important;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  color: #f1c93b;
+  margin-left: 10px !important;
+  margin-right: 10px !important;
+}
+
+.button_close_auto {
+  margin-top: 0 !important;
+}
+.justify-content {
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.modal-main-credit {
+  width: 40% !important;
+  padding: 30px;
+}
+
+.radio_pay {
+  width: 45% !important;
+  border-radius: 10px;
+  border: 1px solid var(--Grey-Variant-9, #e6e6e6);
+  font-family: cursive !important;
+}
+
+span.css-hyxlzm {
+  color: var(--Grey-Variant-9, #e6e6e6);
+}
+#background_change {
+  border: 1px solid var(--Grey-Variant-9, #f1c93b);
+}
+#background_change span.css-hyxlzm {
+  color: var(--Grey-Variant-9, #f1c93b);
+}
+
+.pay-add-input {
+  width: 100% !important;
+  height: 38px;
+  border: 1px solid #c5c5c5;
+  border-radius: 7px;
+  padding-left: 10px;
+  color: #838383;
+}
+/* ----------------contact----------------------- */
+.contact-left {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px 0px 0px 10px;
+}
+.hight-contact {
+  height: 635px !important;
+}
+.name_box_us {
+  display: flex !important;
+  justify-content: space-between;
+}
+.wh-50 {
+  width: 50% !important;
+  text-align: left;
+}
+.box_us {
+  padding: 10px;
+  border: 1px solid rgb(177, 177, 177) !important  ;
+  border-radius: 7px;
+}
+/* -------------------------------- */
 
 @media only screen and (max-width: 920px) {
   .text_large_white_product {
@@ -365,6 +446,27 @@
   .product_image {
     width: 200px;
     height: 175px;
+  }
+
+  .credit_account {
+    border-radius: 10px;
+    background: #fff9e2;
+    padding: 7px;
+    display: grid !important;
+    align-items: center;
+    justify-items: center;
+  }
+  .modal-main-credit {
+    width: 60% !important;
+    padding: 30px;
+  }
+  .wh-50 {
+    width: 100% !important;
+    text-align: left;
+  }
+  .name_box_us {
+    display: grid !important;
+    text-align: left !important;
   }
 }
 
@@ -426,5 +528,16 @@
   }
   .sm_text_padding_bottom {
     margin-bottom: 240px !important;
+  }
+
+  .modal-main-credit {
+    width: 90% !important;
+    padding: 20px;
+  }
+  .form-contact {
+    width: 100% !important;
+  }
+  .hight-contact {
+    height: auto !important;
   }
 }

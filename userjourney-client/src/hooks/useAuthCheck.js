@@ -14,8 +14,8 @@ export default function useAuthCheck() {
       if (auth?.token && auth?.user) {
         dispatch(
           userLoggedIn({
-            token: auth.token,
-            user: auth.user,
+            token: auth?.token,
+            user: auth?.user,
           })
         );
       }

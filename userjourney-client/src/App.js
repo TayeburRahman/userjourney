@@ -13,6 +13,7 @@ import SignUp from "./components/authentication/SingUp";
 import VerifySingIn from "./components/authentication/VerifySingin";
 import AdminCredits from "./components/dashboards/admin/Admin";
 import AdminProduct from "./components/dashboards/admin/AdminProduct";
+import ContactUs from "./components/dashboards/admin/ContactUs";
 import Subscribe from "./components/dashboards/admin/Subscribe";
 import ViewProject from "./components/dashboards/admin/ViewProject";
 import Credits from "./components/dashboards/page/Credits";
@@ -21,6 +22,7 @@ import ProductsDashboard from "./components/dashboards/page/Products";
 import Profile from "./components/dashboards/page/Profile";
 import Project from "./components/dashboards/page/Project";
 import About from "./components/pages/About";
+import Contact from "./components/pages/Contact";
 import Home from "./components/pages/Home";
 import Products from "./components/pages/Product";
 import useAuthCheck from "./hooks/useAuthCheck";
@@ -41,6 +43,7 @@ function App() {
           <Route path="/password/:token/reset" element={<ResetPassword />} />
           <Route path="/verify/otp" element={<VerifySingIn />} />
           <Route path="/active/otp" element={<ActiveAccount />} />
+          <Route path="/contact_us" element={<Contact />} />
 
           {/* Dashboard */}
           <Route
@@ -58,6 +61,7 @@ function App() {
             <Route path="admin/projects" element={<AdminRoute> <AdminCredits /> </AdminRoute>} />
             <Route path="admin/products" element={<AdminRoute><AdminProduct /> </AdminRoute>} />
             <Route path="admin/subscribe" element={<AdminRoute> <Subscribe/> </AdminRoute> } />
+            <Route path="admin/contact" element={<AdminRoute> <ContactUs/> </AdminRoute> } />
          
 
           </Route>

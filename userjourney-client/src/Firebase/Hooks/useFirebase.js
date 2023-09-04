@@ -46,7 +46,7 @@ const useFirebase = () => {
            googleSingIn(useData)   
            
            if(user?.email){
-            const destination = location?.state?.from || "/";
+            const destination = location?.state?.from || "/dashboard";
             setDestination(destination);
             setError("");  
             return;

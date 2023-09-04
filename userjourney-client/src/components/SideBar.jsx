@@ -60,18 +60,9 @@ const SideBar = () => {
   const dispatch = useDispatch();
   var w = window?.innerWidth;
   const auth = useSelector(state => state.auth); 
-  // const localAuth = localStorage?.getItem("_user");
-  //   const localAuthToken = localStorage?.getItem("_token");
-  //   const _token = JSON.parse(localAuthToken); 
-  //   const _user = JSON.parse(localAuth); 
+ 
     const isAdmin = useAdmin()
-    const isSubUser = useSubUsers()
-    
-
-     
-
- 
- 
+    const isSubUser = useSubUsers() 
 
    useEffect(()=>{ 
     
@@ -107,7 +98,7 @@ const SideBar = () => {
       to: "/dashboard/products",
     },
     {
-      name: "Accounts",
+      name: "Profile",
       icon: <AccountCircleIcon   />,
       to: "/dashboard/profile",
     }, 
@@ -154,7 +145,6 @@ const SideBar = () => {
       icon: <RedeemIcon   />,
       to: "/dashboard/admin/contact ",
     } 
-    
   ];
 
   
@@ -177,10 +167,12 @@ const navigate = useNavigate()
         }}
       >
         <Box className="nav_width">
-           <Box className="nav_width" id={`${noneDisplay && "noneDisplay"}`}>
+            <Link to="/home" className="link_nav_logo">
+            <Box className="nav_width" id={`${noneDisplay && "noneDisplay"}`}>
               <img src={noto_rocket} alt="logo" className="noto_rocket" />
               <h6 className="pee_pips_dashboard">PeepPips</h6> 
            </Box>
+            </Link>
 
            <IconButton onClick={toggleDrawer} className="iconNone">
                <MenuIcon className="iconNone" /> 
@@ -189,10 +181,8 @@ const navigate = useNavigate()
          
       </Toolbar>
       <Divider />
-
-      {/* Dashboard Dower Router  */}
+      
       <List component="nav">
-
       {listItem?.map(({ name, icon, to }) => (
           <Link className="router_link " to={to} key={to} >
             <ListItemButton
@@ -221,10 +211,8 @@ const navigate = useNavigate()
               />
             </ListItemButton>
           </Link>
-        ))} 
-
- 
-
+        ))}  
+        
       {
        isAdmin &&  adminItem?.map(({name, icon, to})=>(
             <Link className="router_link " to={to} key={to} >

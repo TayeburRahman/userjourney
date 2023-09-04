@@ -83,7 +83,7 @@ export default function LeftSmallNav({logoGreen}) {
      <Box>
      <List component="nav" className='list_item'  > 
       {listItem.map(({ name,  to }) => ( 
-             <Link className="router_link  link_nav_dower mb-4" to={to} key={to} >
+             <Link className="router_link  link_nav_dower mb-3" to={to} key={to} >
             <ListItemButton
               className="dower_routing_button mb-1 J_c_f_s"
               id={`${pathname === to ? "background": "background_white"}`}
@@ -95,7 +95,7 @@ export default function LeftSmallNav({logoGreen}) {
         ))} 
 
 {  isAuth && dashboard.map(({ name, to }) => ( 
-             <Link className="router_link  link_nav_dower mb-4" to={to} key={to} >
+             <Link className="router_link  link_nav_dower mb-3" to={to} key={to} >
             <ListItemButton
               className="dower_routing_button mb-1 J_c_f_s"
               id={`${pathname === to ? "background": "background_white"}`}

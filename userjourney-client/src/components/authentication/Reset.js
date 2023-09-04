@@ -88,18 +88,19 @@ const ResetPassword = () => {
   const handleOnClick = (e) => {
     e.preventDefault();
     const password = confirmPass === newPass;
-
-    if (confirmPass || newPass.length < 6) {
-      setErrorMessage("Password must be at least 6 characters.")
-    }
+    
+    setErrorMessage("")
+  
     if (!password) {
       setErrorMessage("Confirm Password does not match")
+      return;
     }
 
     axios
     .put(`http://localhost:5000/api/v1/user/password/change/${_user?.email}`, { password: newPass })
     .then((res) => { 
             alert("Successfully create project!"); 
+            navigate("/home")
     })
     .catch((error) => {
         console.log(error);

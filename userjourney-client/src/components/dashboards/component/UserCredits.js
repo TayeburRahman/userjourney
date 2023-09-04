@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import remove_icon from "../../../assets/delete.svg";
 import { creditsListGet } from '../../../features/auth/authSlice';
 import useAdmin from '../../../hooks/useAdmin';
+import CreditAccount from './CreditAccount';
 import DeleteCridets from './DeleteCridets';
  
 
@@ -192,10 +193,12 @@ EnhancedTableHead.propTypes = {
 export default function UserCredits() {
   const [page, setPage] = useState(0); 
   const [onState, setOnState] = useState(false) 
+  const [openAccount, setOpenAccount] = useState(false) 
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dataCredits, setAllCredits] = useState([]) 
   const [openRemove, setOpenRemove] = useState(false); 
   const [removeData, setRemoveData] = useState([]) 
+   
  
   const localAuth = localStorage?.getItem("_user");
   const _user  = JSON.parse(localAuth); 
@@ -262,6 +265,10 @@ export default function UserCredits() {
     setRemoveData(data)
   }
 
+  const handleOpen = (data) => {
+    setOpenAccount(true); 
+  }
+
   const handleDeactivate = (data) => {
     
     axios
@@ -294,6 +301,11 @@ export default function UserCredits() {
   return (
     <Box sx={{ width: '100%' }}>
       <Box className='p-3 box_peeper' sx={{ width: '100%', mb: 2 }}>
+
+        <Box className="credit_account"> <Typography className='credit_account_text'>Hey Ariel, you are yet to credit your account. Click this button to credit now and unlock full benefits of Peepips!</Typography>   <button 
+        onClick={handleOpen} 
+        className='add_project_button'>Credit Account</button>    </Box>
+        <CreditAccount setOpenAccount={setOpenAccount} openAccount={openAccount}  />
 
            <Box className="dp_sh_flex_box"> 
             {isAdmin ?(
