@@ -25,7 +25,7 @@ function Home() {
                                 </h4>
                                 <p className='text_sm_white text-left padding_bottom_50'>We help you turn your manual coding strategies into automated bots that you can resell on our platform and make an extra income.</p>
                                 <div className='text-left  '>
-                                    <Link to="/" className='home_button'>Get Started</Link>
+                                    <Link to="/login" className='home_button'>Get Started</Link>
                                 </div>
                             </div>
                             <div className='col-sm-12 col-md-6 col-lg-6'>
